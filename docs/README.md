@@ -46,61 +46,101 @@ flowchart LR
 ### User flow (kompleks)
 ```mermaid
 flowchart TD
-  %% Guest exploration
-  subgraph G[Guest]
-    GA[Home / Landing] --> GB[Explore: List Destinations]
-    GB --> GC[Search & Filter\n(by name / category / location)]
-    GC --> GD[Open Destination Detail]
-    GD --> GE[Fetch Weather Info\n(OpenWeatherMap)]
-    GE --> GD
-    GD --> GF{Wants to like / review / plan?}
-    GF -- No --> GG[Continue Browsing]
-    GF -- Yes --> AH[Auth Gateway]
-  end
+  %% Guest flow
+  G1[Home Landing] --> G2[Explore Destinations]
+  G2 --> G3[Search and Filter]
+  G3 --> G4[View Destination Detail]
+  G4 --> G5[View Weather Info]
+  G5 --> G4
+  G4 --> G6{Want to interact?}
+  G6 -->|No| G7[Continue Browsing]
+  G6 -->|Yes| AUTH[Login or Register]
+  G7 --> G2
 
-  %% Auth gateway
-  AH -->|Login/Register| AU[Authenticated]
+  %% Authentication
+  AUTH --> ROLE_CHECK{Check User Role}
+  ROLE_CHECK -->|isAdmin true| ADMIN_START[Admin Dashboard]
+  ROLE_CHECK -->|isAdmin false| USER_START[User Home]
 
-  %% Authenticated user actions
-  subgraph U[Authenticated User]
-    AU --> U1[Like / Unlike Destination]
-    AU --> U2[Write Review]
-    U2 --> U2e[Edit / Delete Review]
-    AU --> U3[Create Itinerary]
-    U3 --> U3a[Add Destination to Itinerary]
-    U3a --> U3b[Set Visit DateTime]
-    U3b --> U3c[Order / Reorder Items]
-    U3c --> U3d[Add Notes]
-    U3d --> U3v[View / Share Itinerary]
-    AU --> U4[Submit New Destination]
-    U4 --> U4i[Upload Images]
-    U4i --> U4s[Submit for Admin Review]
-  end
+  %% User actions
+  USER_START --> U1[Profile Management]
+  USER_START --> U2[Destination Actions]
+  USER_START --> U3[Itinerary Management]
+  USER_START --> U4[Submit New Destination]
+  USER_START --> U5[View Favorites]
 
-  %% Admin moderation
-  subgraph A[Admin]
-    A0[Admin Login] --> A1[Review Submissions]
-    A1 -->|Approve| A2[Create Published Destination\n(+ primary images)]
-    A1 -->|Reject| A3[Write Admin Note]
-    A2 --> A4[Visible in Public Catalog]
-    A3 --> A5[Notify Submitter]
-  end
+  %% Destination interactions
+  U2 --> U2A[Like Unlike Destination]
+  U2 --> U2B[Write Review]
+  U2B --> U2C[Edit Delete Review]
 
-  %% Navigation loops
-  GG --> GB
-  U1 --> GD
-  U2e --> GD
-  U3v --> GB
-  U4s --> A1
-  A4 --> GB
+  %% Itinerary workflow
+  U3 --> U3A[Create New Itinerary]
+  U3A --> U3B[Add Destinations]
+  U3B --> U3C[Set Visit DateTime]
+  U3C --> U3D[Add Notes]
+  U3D --> U3E[View Edit Delete Itinerary]
 
-  %% Validation / errors (simplified)
-  classDef warn fill:#FFF3CD,stroke:#E6C200,color:#000;
-  V1[Validation Error]:::warn
-  U2 --> V1
-  U4i --> V1
-  U3a --> V1
+  %% Destination submission
+  U4 --> U4A[Fill Destination Form]
+  U4A --> U4B[Upload Images]
+  U4B --> U4C[Submit for Review]
+  U4C --> U4D[Status Pending]
+
+  %% Admin actions
+  ADMIN_START --> A1[Dashboard Overview]
+  ADMIN_START --> A2[User Management]
+  ADMIN_START --> A3[Destination Management]
+  ADMIN_START --> A4[Category Management]
+  ADMIN_START --> A5[Review Submissions]
+
+  %% User management
+  A2 --> A2A[View All Users]
+  A2A --> A2B[Create Edit Delete Users]
+  A2B --> A2C[Set User Status Admin Role]
+
+  %% Destination management
+  A3 --> A3A[View All Destinations]
+  A3A --> A3B[Create Edit Delete Destinations]
+  A3B --> A3C[Manage Destination Images]
+
+  %% Category management
+  A4 --> A4A[View All Categories]
+  A4A --> A4B[Create Edit Delete Categories]
+
+  %% Review submissions
+  A5 --> A5A[View Pending Submissions]
+  A5A --> A5B{Review Decision}
+  A5B -->|Approve| A5C[Create Published Destination]
+  A5B -->|Reject| A5D[Add Admin Note and Reject]
+  A5C --> A5E[Destination Goes Live]
+  A5D --> A5F[Notify Submitter]
+
+  %% Cross-actor flows
+  U2A --> G4
+  U2C --> G4
+  U3E --> G2
+  U4D --> A5A
+  A5E --> G2
+  A5F --> U4D
+
+  %% Logout flows
+  U1 --> LOGOUT[Logout]
+  A1 --> LOGOUT
+  LOGOUT --> G1
+
+  %% Styling
+  classDef guestNode fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+  classDef userNode fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+  classDef adminNode fill:#fff3e0,stroke:#e65100,stroke-width:2px
+  classDef authNode fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+
+  class G1,G2,G3,G4,G5,G6,G7 guestNode
+  class USER_START,U1,U2,U2A,U2B,U2C,U3,U3A,U3B,U3C,U3D,U3E,U4,U4A,U4B,U4C,U4D,U5 userNode
+  class ADMIN_START,A1,A2,A2A,A2B,A2C,A3,A3A,A3B,A3C,A4,A4A,A4B,A5,A5A,A5B,A5C,A5D,A5E,A5F adminNode
+  class AUTH,ROLE_CHECK,LOGOUT authNode
 ```
+
 ### 🔄 Alur Kerja Service Pattern:
 1. **Controller** menerima HTTP request
 2. **Controller** memanggil **Service** yang sesuai
