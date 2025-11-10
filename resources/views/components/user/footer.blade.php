@@ -3,7 +3,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
             <!-- Kolom 1: Logo dan Deskripsi -->
             <div>
-                <h2 class="text-2xl font-semibold">Nusatawan.</h2>
+                <h2 class="text-2xl font-semibold">Nusatarawisata-Kaltim.</h2>
                 <p class="mt-2 text-sm">
                     Platform informasi wisata berbasis web dengan integrasi cuaca dan kontribusi pengguna.
                 </p>
@@ -46,7 +46,7 @@
 
         <!-- Copyright -->
         <div class="mt-8 text-center text-sm border-t border-white/20 pt-4">
-            <p>© 2025 Nusatawan. Dibuat sebagai Proyek Skripsi.
+            <p>© 2025 Nusatarawisata-Kaltim. Dibuat sebagai Proyek Skripsi.
                 <a href="#" class="underline">Syarat & Ketentuan</a> |
                 <a href="#" class="underline">Kebijakan Privasi</a>
             </p>

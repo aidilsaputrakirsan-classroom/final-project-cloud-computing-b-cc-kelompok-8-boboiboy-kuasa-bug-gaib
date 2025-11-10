@@ -7,7 +7,7 @@
         <a href="{{ route('user.home') }}" class="flex items-center space-x-3 rtl:space-x-reverse">
             <span
                 class="self-center text-xl md:text-2xl font-semibold whitespace-nowrap text-white transition-colors duration-300"
-                id="brand-text">Nusatawan.</span>
+                id="brand-text">Nusatarawisata-Kaltim.</span>
         </a>
 
         <!-- Mobile Menu Toggle Button -->

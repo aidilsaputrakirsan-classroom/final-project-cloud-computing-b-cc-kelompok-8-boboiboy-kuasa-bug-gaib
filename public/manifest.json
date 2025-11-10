@@ -19,9 +19,9 @@
     "display": "standalone",
     "dir": "auto",
     "lang": "id-ID",
-    "name": "Nusatawan",
-    "short_name": "Nusatawan",
+    "name": "Nusatarawisata-Kaltim",
+    "short_name": "Nusatarawisata-Kaltim",
     "start_url": "/",
     "scope": "/",
-    "description": "Nusatawan membantu wisatawan dalam merencanakan perjalanan mereka dengan menyediakan informasi mengenai destinasi wisata di Indonesia yang terintegrasi dengan data cuaca."
+    "description": "Nusatarawisata-Kaltim membantu wisatawan dalam merencanakan perjalanan mereka dengan menyediakan informasi mengenai destinasi wisata di Indonesia yang terintegrasi dengan data cuaca."
 }

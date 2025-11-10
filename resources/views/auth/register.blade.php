@@ -4,33 +4,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Nusatawan</title>
+    <title>Register - </title>
 
     {{-- manifest --}}
     <link rel="manifest" href="{{ asset('manifest.json') }}">
     <link rel="icon" href="{{ asset('images/icon/icon512_rounded.png') }}">
 
-    <meta name="title" content="Nusatawan" />
+    <meta name="title" content="Nusatarawisata-Kaltim" />
     <meta name="description"
-        content="Nusatawan membantu merencanakan perjalanan wisata di Indonesia dengan informasi destinasi terintegrasi prakiraan cuaca. Temukan tempat wisata favorit dan ketahui kondisi cuaca sebelum berkunjung.">
+        content="Nusatarawisata-Kaltim membantu merencanakan perjalanan wisata di Indonesia dengan informasi destinasi terintegrasi prakiraan cuaca. Temukan tempat wisata favorit dan ketahui kondisi cuaca sebelum berkunjung.">
     <meta name="keywords"
         content="wisata Indonesia, prakiraan cuaca wisata, destinasi wisata, perencanaan perjalanan, informasi wisata, cuaca destinasi wisata, pariwisata Indonesia">
-    <meta name="author" content="Nusatawan">
+    <meta name="author" content="Nusatarawisata-Kaltim">
     <meta name="robots" content="index, follow">
     <meta name="language" content="Indonesia">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://www.nusatawan.com/">
-    <meta property="og:title" content="Nusatawan - Informasi Wisata & Prakiraan Cuaca Indonesia">
+    <meta property="og:title" content="Nusatarawisata-Kaltim - Informasi Wisata & Prakiraan Cuaca Indonesia">
     <meta property="og:description"
         content="Rencanakan perjalanan wisata Anda dengan informasi destinasi dan prakiraan cuaca terintegrasi di seluruh Indonesia.">
     <meta property="og:image" content="{{ asset('images/logo/nusatawan-logo.png') }}">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://www.nusatawan.com/">
-    <meta property="twitter:title" content="Nusatawan - Informasi Wisata & Prakiraan Cuaca Indonesia">
+    <meta property="twitter:title" content="Nusatarawisata-Kaltim - Informasi Wisata & Prakiraan Cuaca Indonesia">
     <meta property="twitter:description"
         content="Rencanakan perjalanan wisata Anda dengan informasi destinasi dan prakiraan cuaca terintegrasi di seluruh Indonesia.">
     <meta property="twitter:image" content="{{ asset('images/logo/nusatawan-logo.png') }}">
@@ -39,12 +37,11 @@
     <meta name="theme-color" content="#1e3a8a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Nusatawan">
+    <meta name="apple-mobile-web-app-title" content="Nusatarawisata-Kaltim">
 
     <!-- Metatags Tambahan untuk SEO -->
     <meta name="geo.region" content="ID">
     <meta name="geo.placename" content="Indonesia">
-    <link rel="canonical" href="https://www.nusatawan.com/">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
@@ -76,10 +73,10 @@
             <div
                 class="absolute inset-0 bg-gradient-to-br from-blue-600/60 to-blue-900/60 flex flex-col justify-between p-8">
                 <div>
-                    <img src="{{ asset('images/logo/nusatawan-logo.png') }}" alt="Nusatawan Logo" class="h-20">
+                    <img src="{{ asset('images/logo/nusatawan-logo.png') }}" alt=" Logo" class="h-20">
                 </div>
                 <div class="text-white mb-10">
-                    <h1 class="text-3xl font-bold mb-4">Bergabunglah dengan Nusatawan</h1>
+                    <h1 class="text-3xl font-bold mb-4">Bergabunglah dengan Nusatarawisata-Kaltim</h1>
                     <p class="text-lg opacity-90">Jelajahi keindahan nusantara dan bagikan pengalaman perjalanan Anda
                         dengan komunitas wisatawan Indonesia.</p>
                 </div>

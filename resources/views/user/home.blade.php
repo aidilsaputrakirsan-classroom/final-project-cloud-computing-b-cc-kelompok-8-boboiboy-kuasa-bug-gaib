@@ -128,14 +128,14 @@
         </div>
     </x-section>
 
-    {{-- Nusatawan Section --}}
+    {{-- Nusatarawisata-Kaltim Section --}}
     <div class="bg-primary py-24">
         <x-section>
             <div class="text-center ">
                 <h1 class="text-2xl md:text-4xl font-semibold mb-8 text-white">
                     Apa yang
                     <span class=" text-3xl md:text-5xl font-bold">
-                        Nusatawan
+                        Nusatarawisata-Kaltim
                     </span>
                     bawa untuk Anda?
                 </h1>
