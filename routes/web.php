@@ -64,6 +64,7 @@ Route::get('/tentang', function () {
 })->name('user.about');
 
 // Destination Public Routes
+
 Route::match(['get', 'post'], 'destinasi', [DestinationController::class, 'index'])
     ->name('user.destinations.index');
 
@@ -71,6 +72,9 @@ Route::resource('destinasi', DestinationController::class)
     ->only(['show'])
     ->parameters(['destinasi' => 'destination:slug'])
     ->names(['show' => 'user.destinations.show']);
+
+// Like/Unlike Destination
+Route::post('destinasi/{destination}/like', [DestinationController::class, 'like'])->name('user.destinations.like');
 
  // Destination Submission Routes
     Route::prefix('pengajuan-destinasi')->name('destination-submission.')->group(function () {

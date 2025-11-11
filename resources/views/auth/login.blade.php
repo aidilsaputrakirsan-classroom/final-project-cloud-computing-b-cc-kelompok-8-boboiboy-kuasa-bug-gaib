@@ -95,7 +95,7 @@
             <div
                 class="absolute inset-0 bg-gradient-to-br from-blue-600/60 to-blue-900/60 flex flex-col justify-between p-8">
                 <div>
-                    <img src="{{ asset('images/logo/nusatawan-logo.png') }}" alt="Nusatawan Logo" class="h-20">
+                    <img src="{{ asset('images/logo/nusatarawisarta-kaltim.png') }}" alt="Nusatarawisata-Kaltim Logo" class="h-20">
                 </div>
                 <div class="text-white mb-10">
                     <h1 class="text-3xl font-bold mb-4">Jelajahi Keindahan Nusantara</h1>
@@ -109,7 +109,7 @@
             <div class="w-full max-w-md">
                 <!-- Logo untuk tampilan mobile -->
                 <div class="flex justify-center mb-6 md:hidden">
-                    <img src="{{ asset('images/logo/nusatawan-logo.png') }}" alt="Nusatawan Logo" class="h-12">
+                    <img src="{{ asset('images/logo/nusatarawisarta-kaltim.png') }}" alt="Nusatarawisata-Kaltim Logo" class="h-12">
                 </div>
 
                 <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Selamat Datang Kembali</h2>

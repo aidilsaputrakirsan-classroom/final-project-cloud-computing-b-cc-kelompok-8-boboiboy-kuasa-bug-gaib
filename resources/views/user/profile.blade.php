@@ -47,11 +47,12 @@
                 <div class="text-3xl font-bold text-blue-600">{{ $destinationUserTotal }}</div>
                 <div class="text-sm text-gray-600 font-medium">Destinasi</div>
             </div>
-            <a href="{{ route('user.destination-favorite.index') }}"
-                class="bg-white p-4 rounded-lg shadow-md text-center transition-transform hover:transform hover:scale-105">
+            <!--
+            <a href="#" class="bg-white p-4 rounded-lg shadow-md text-center transition-transform hover:transform hover:scale-105">
                 <div class="text-3xl font-bold text-blue-600">{{ $likedDestinationUserTotal }}</div>
                 <div class="text-sm text-gray-600 font-medium">Menyukai Destinasi</div>
             </a>
+            -->
         </div>
 
         <!-- Tabs Section -->
@@ -83,7 +84,7 @@
                     <div class="mb-6">
                         <h3 class="text-xl font-semibold mb-6">Profil Ku</h3>
 
-                        <form action="{{ route('user.profile.update', $profile) }}" method="POST"
+                        <form action="{{ route('profile.update', $profile) }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
                             @method('PATCH')
@@ -197,7 +198,7 @@
                                         d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                                 </svg>
                                 <p class="text-gray-500 text-lg mb-6">Anda belum memiliki destinasi yang dibagikan.</p>
-                                <a href="{{ route('user.destination-submission.create') }}"
+                                <a href="{{ route('destination-submission.create') }}"
                                     class="inline-flex items-center px-6 py-3 bg-blue-600 border border-transparent rounded-lg font-semibold text-white text-base hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 ease-in-out shadow-md">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
@@ -209,7 +210,7 @@
                             </div>
                         @else
                             <div class="col-span-full flex justify-center mb-6">
-                                <a href="{{ route('user.destination-submission.create') }}"
+                                <a href="{{ route('destination-submission.create') }}"
                                     class="inline-flex items-center px-5 py-2.5 bg-blue-600 border border-transparent rounded-md font-semibold text-white hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 ease-in-out shadow-sm">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
@@ -383,7 +384,7 @@
                                                     </svg>
                                                 </a>
                                             @elseif($destinationSubmission->status == 'rejected')
-                                                <a href="{{ route('user.destination-submission.create') }}"
+                                                <a href="{{ route('destination-submission.create') }}"
                                                     class="text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors duration-200 flex items-center">
                                                     Ajukan Ulang Destinasi
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1"

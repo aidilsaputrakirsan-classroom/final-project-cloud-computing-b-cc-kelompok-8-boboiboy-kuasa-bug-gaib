@@ -103,9 +103,9 @@ class ProfileService
      */
     private function uploadImage($image): string
     {
-        $imageName = uniqid() . '-' . Str::random(10) . '-' . time() . '.' . $image->extension();
-        $path = $image->storeAs('users', $imageName);
-
-        return str_replace('', '', $path);
+    $imageName = uniqid() . '-' . Str::random(10) . '-' . time() . '.' . $image->extension();
+    // Simpan ke disk 'public' agar bisa diakses dari public/storage
+    $path = $image->storeAs('users', $imageName, 'public');
+    return $path;
     }
 }

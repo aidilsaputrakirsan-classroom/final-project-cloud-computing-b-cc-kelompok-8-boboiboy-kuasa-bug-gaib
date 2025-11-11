@@ -73,9 +73,12 @@ class ProfileController extends Controller
             'password_confirmation' => 'nullable',
         ], $messages);
 
+        // Pastikan image dikirim sebagai file (UploadedFile) ke service
+        $validatedData['image'] = $request->file('image');
+
         $user = $this->profileService->updateProfile($user, $validatedData);
 
         // Redirect ke halaman profil dengan pesan sukses
-        return redirect()->route('user.profile.show')->with('success', 'Profil berhasil diperbarui.');
+        return redirect()->route('profile.show')->with('success', 'Profil berhasil diperbarui.');
     }
 }
