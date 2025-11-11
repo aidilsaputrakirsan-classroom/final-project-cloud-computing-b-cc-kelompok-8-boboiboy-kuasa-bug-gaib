@@ -95,7 +95,7 @@
                             'label' => 'Destinasi',
                         ],
                         [
-                            'route' => 'user.itinerary.index',
+                            'route' => null, // Belum ada route, gunakan null
                             'name' => 'user.itinerary.index',
                             'label' => 'Rencana Perjalanan',
                         ],
@@ -105,7 +105,7 @@
 
                 @foreach ($menus as $menu)
                     <li>
-                        <a href="{{ route($menu['route']) }}"
+                        <a href="{{ $menu['route'] ? route($menu['route']) : '#' }}"
                             class="block py-2 px-3 rounded-md md:px-3 lg:px-4 md:py-1.5 md:rounded-full transition-all duration-300
                             {{ $currentPage == $menu['name'] ? 'bg-blue-600 text-white' : 'text-gray-700 hover:bg-gray-200 md:text-white md:hover:bg-blue-600/80' }} "
                             id="nav-link-{{ str_replace('.', '-', $menu['name']) }}" data-page="{{ $menu['name'] }}">
