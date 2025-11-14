@@ -94,7 +94,7 @@
                             'label' => 'Destinasi',
                         ],
                         [
-                            'route' => null, // Belum ada route, gunakan null
+                            'route' => 'user.itinerary.index', // Sudah ada route
                             'name' => 'user.itinerary.index',
                             'label' => 'Rencana Perjalanan',
                         ],

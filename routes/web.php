@@ -13,6 +13,7 @@ use App\Http\Controllers\User\ReviewController;
 use App\Http\Controllers\User\DestinationController;
 use App\Http\Controllers\User\DestinationSubmissionController;
 use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\User\ItineraryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,6 +65,10 @@ Route::get('/tentang', function () {
 })->name('user.about');
 
 // Destination Public Routes
+// Itinerary Public Route
+Route::post('/rencana-perjalanan', [ItineraryController::class, 'store'])->name('user.itinerary.store');
+Route::get('/rencana-perjalanan/create', [ItineraryController::class, 'create'])->name('user.itinerary.create');
+Route::get('/rencana-perjalanan', [ItineraryController::class, 'index'])->name('user.itinerary.index');
 
 Route::match(['get', 'post'], 'destinasi', [DestinationController::class, 'index'])
     ->name('user.destinations.index');

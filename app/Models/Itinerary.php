@@ -14,8 +14,8 @@ class Itinerary extends Model
     protected $fillable = [
         'user_id',
         'title',
-        'startDate',
-        'endDate',
+        'start_date',
+        'end_date',
         'status'
     ];
 
