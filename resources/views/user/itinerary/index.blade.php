@@ -108,10 +108,10 @@
                 <div class="relative min-w-[140px] w-full sm:w-auto">
                     <select id="status" name="status"
                         class="appearance-none w-full bg-white pl-3 pr-10 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">Semua Status</option>
-                        <option value="draft">Rencana</option>
-                        <option value="ongoing">Sedang Berlangsung</option>
-                        <option value="complete">Selesai</option>
+                        <option value="" {{ request('status') == '' ? 'selected' : '' }}>Semua Status</option>
+                        <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Rencana</option>
+                        <option value="ongoing" {{ request('status') == 'ongoing' ? 'selected' : '' }}>Sedang Berlangsung</option>
+                        <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Selesai</option>
                     </select>
                 </div>
 
@@ -119,10 +119,10 @@
                 <div class="relative min-w-[140px] w-full sm:w-auto">
                     <select id="sort" name="sort"
                         class="appearance-none w-full bg-white pl-3 pr-10 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        <option value="newest">Terbaru</option>
-                        <option value="oldest">Terlama</option>
-                        <option value="title_asc">Judul (A-Z)</option>
-                        <option value="title_desc">Judul (Z-A)</option>
+                        <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Terbaru</option>
+                        <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Terlama</option>
+                        <option value="title_asc" {{ request('sort') == 'title_asc' ? 'selected' : '' }}>Judul (A-Z)</option>
+                        <option value="title_desc" {{ request('sort') == 'title_desc' ? 'selected' : '' }}>Judul (Z-A)</option>
                     </select>
                 </div>
 
@@ -167,15 +167,26 @@
                                     {{ \Carbon\Carbon::parse($itinerary->end_date)->format('d M Y') }}
                                 </p>
                             </div>
-                            <span
-                                class="px-3 py-1 text-xs font-semibold rounded-full {{ $itinerary->status == 'ongoing' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800' }}">
-                                {{ $itinerary->status == 'draft'
-                                    ? 'Rencana'
-                                    : ($itinerary->status == 'ongoing'
-                                        ? 'Sedang Berlangsung'
-                                        : ($itinerary->status == 'completed'
-                                            ? 'Selesai'
-                                            : 'Status Tidak Diketahui')) }}
+                            @php
+                                $now = \Carbon\Carbon::now()->toDateString();
+                                $start = \Carbon\Carbon::parse($itinerary->start_date)->toDateString();
+                                $end = \Carbon\Carbon::parse($itinerary->end_date)->toDateString();
+                                if ($now < $start) {
+                                    $statusText = 'Rencana';
+                                    $statusClass = 'bg-green-100 text-green-800';
+                                } elseif ($now >= $start && $now <= $end) {
+                                    $statusText = 'Sedang Berlangsung';
+                                    $statusClass = 'bg-blue-100 text-blue-800';
+                                } elseif ($now > $end) {
+                                    $statusText = 'Selesai';
+                                    $statusClass = 'bg-purple-100 text-purple-800';
+                                } else {
+                                    $statusText = 'Status Tidak Diketahui';
+                                    $statusClass = 'bg-gray-100 text-gray-800';
+                                }
+                            @endphp
+                            <span class="px-3 py-1 text-xs font-semibold rounded-full {{ $statusClass }}">
+                                {{ $statusText }}
                             </span>
                         </div>
 

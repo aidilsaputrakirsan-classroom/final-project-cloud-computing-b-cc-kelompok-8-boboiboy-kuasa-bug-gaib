@@ -56,6 +56,25 @@ Route::middleware('guest')->group(function () {
 |
 */
 Route::middleware('auth')->group(function () {
+                                Route::patch('/rencana-perjalanan/{itinerary}', [ItineraryController::class, 'update'])->name('user.itinerary.update');
+                            Route::delete('/rencana-perjalanan/destinasi/remove', function() {
+                                // Implementasi hapus destinasi dari itinerary, bisa diganti dengan controller sesuai kebutuhan
+                                return response()->json(['success' => true]);
+                            })->name('user.itinerary.destination.remove');
+                        Route::post('/rencana-perjalanan/destinasi/add', function() {
+                            // Implementasi tambah destinasi ke itinerary, bisa diganti dengan controller sesuai kebutuhan
+                            return response()->json(['success' => true]);
+                        })->name('user.itinerary.destination.add');
+                    Route::get('/rencana-perjalanan/destinasi/search-coordinates', function() {
+                        // Implementasi pencarian destinasi berdasarkan koordinat, bisa diganti dengan controller sesuai kebutuhan
+                        return response()->json([]);
+                    })->name('user.itinerary.destination.search.coordinates');
+                Route::get('/rencana-perjalanan/destinasi/search', function() {
+                    // Implementasi pencarian destinasi, bisa diganti dengan controller sesuai kebutuhan
+                    return response()->json([]);
+                })->name('user.itinerary.destination.search.name');
+            Route::get('/rencana-perjalanan/{itinerary}/edit', [ItineraryController::class, 'edit'])->name('user.itinerary.edit');
+        Route::delete('/rencana-perjalanan/{itinerary}', [ItineraryController::class, 'destroy'])->name('user.itinerary.destroy');
     Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 });
 // Public Routes
@@ -65,10 +84,14 @@ Route::get('/tentang', function () {
 })->name('user.about');
 
 // Destination Public Routes
-// Itinerary Public Route
-Route::post('/rencana-perjalanan', [ItineraryController::class, 'store'])->name('user.itinerary.store');
-Route::get('/rencana-perjalanan/create', [ItineraryController::class, 'create'])->name('user.itinerary.create');
-Route::get('/rencana-perjalanan', [ItineraryController::class, 'index'])->name('user.itinerary.index');
+// Itinerary CRUD hanya untuk user yang sudah login
+Route::middleware('auth')->group(function () {
+    Route::get('/rencana-perjalanan', [ItineraryController::class, 'index'])->name('user.itinerary.index');
+    Route::get('/rencana-perjalanan/create', [ItineraryController::class, 'create'])->name('user.itinerary.create');
+    Route::post('/rencana-perjalanan', [ItineraryController::class, 'store'])->name('user.itinerary.store');
+    Route::get('/rencana-perjalanan/{itinerary}', [ItineraryController::class, 'show'])->name('user.itinerary.show');
+    // Tambahkan route edit, update, show, destroy jika diperlukan
+});
 
 Route::match(['get', 'post'], 'destinasi', [DestinationController::class, 'index'])
     ->name('user.destinations.index');

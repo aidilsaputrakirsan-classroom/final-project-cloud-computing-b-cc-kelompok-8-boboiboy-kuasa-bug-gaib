@@ -68,22 +68,22 @@
                     <!-- Tanggal -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label for="startDate" class="block text-sm font-medium text-gray-700">Tanggal Mulai</label>
-                            <input type="date" name="startDate" id="startDate"
+                            <label for="start_date" class="block text-sm font-medium text-gray-700">Tanggal Mulai</label>
+                            <input type="date" name="start_date" id="start_date"
                                 class="mt-1 block w-full px-3 py-3 text-base rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white text-gray-900 min-h-[44px] appearance-none"
                                 style="-webkit-appearance: none; -moz-appearance: none; touch-action: manipulation; position: relative;"
-                                value="{{ old('startDate', $itinerary->startDate) }}" required>
-                            @error('startDate')
+                                value="{{ old('start_date', $itinerary->start_date) }}" required>
+                            @error('start_date')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
                         <div>
-                            <label for="endDate" class="block text-sm font-medium text-gray-700">Tanggal Selesai</label>
-                            <input type="date" name="endDate" id="endDate"
+                            <label for="end_date" class="block text-sm font-medium text-gray-700">Tanggal Selesai</label>
+                            <input type="date" name="end_date" id="end_date"
                                 class="mt-1 block w-full px-3 py-3 text-base rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white text-gray-900 min-h-[44px] appearance-none"
                                 style="-webkit-appearance: none; -moz-appearance: none; touch-action: manipulation; position: relative;"
-                                value="{{ old('endDate', $itinerary->endDate) }}" required>
-                            @error('endDate')
+                                value="{{ old('end_date', $itinerary->end_date) }}" required>
+                            @error('end_date')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
