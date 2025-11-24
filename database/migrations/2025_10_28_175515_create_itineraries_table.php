@@ -16,8 +16,8 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('title');
             $table->string('slug')->unique();
-            $table->date('start_date');
-            $table->date('end_date');
+            $table->date('startDate');
+            $table->date('endDate');
             $table->enum('status', ['completed', 'ongoing', 'draft'])->default('ongoing');
             $table->timestamps();
         });
