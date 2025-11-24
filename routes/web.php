@@ -7,6 +7,12 @@ use App\Http\Controllers\Admin\DestinationSubmissionController as AdminDestinati
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\User\HomeController;
+use App\Http\Controllers\User\FavoriteController;
+use App\Http\Controllers\User\ReviewController;
+use App\Http\Controllers\User\DestinationController;
+use App\Http\Controllers\User\DestinationSubmissionController;
+use App\Http\Controllers\User\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,7 +57,31 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 });
+// Public Routes
+Route::get('/', [HomeController::class, 'index'])->name('user.home');
+Route::get('/tentang', function () {
+    return view('user.about');
+})->name('user.about');
 
+// Destination Public Routes
+Route::match(['get', 'post'], 'destinasi', [DestinationController::class, 'index'])
+    ->name('user.destinations.index');
+
+Route::resource('destinasi', DestinationController::class)
+    ->only(['show'])
+    ->parameters(['destinasi' => 'destination:slug'])
+    ->names(['show' => 'user.destinations.show']);
+
+ // Destination Submission Routes
+    Route::prefix('pengajuan-destinasi')->name('destination-submission.')->group(function () {
+        Route::get('/', [DestinationSubmissionController::class, 'create'])->name('create');
+        Route::post('/', [DestinationSubmissionController::class, 'store'])->name('store');
+    });
+// Profile Routes
+    Route::prefix('profil')->name('profile.')->group(function () {
+        Route::get('/', [ProfileController::class, 'show'])->name('show');
+        Route::patch('/{user}', [ProfileController::class, 'update'])->name('update');
+    });
 /*
 |--------------------------------------------------------------------------
 | Admin Routes (Khusus Admin)
