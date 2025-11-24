@@ -4,34 +4,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Nusatawan</title>
+    <title>Login - Nusatarawisata-Kaltim</title>
     {{-- manifest --}}
     <link rel="manifest" href="{{ asset('manifest.json') }}">
     <link rel="icon" href="{{ asset('images/icon/icon512_rounded.png') }}">
 
     {{-- <link rel="icon" href="{{ asset('images/logo/nusatawan-logo.png') }}" type="image/png"> --}}
-    <meta name="title" content="Nusatawan" />
+    <meta name="title" content="Nusatarawisata-Kaltim" />
     <meta name="description"
-        content="Nusatawan membantu merencanakan perjalanan wisata di Indonesia dengan informasi destinasi terintegrasi prakiraan cuaca. Temukan tempat wisata favorit dan ketahui kondisi cuaca sebelum berkunjung.">
+        content="Nusatarawisata-Kaltim membantu merencanakan perjalanan wisata di Indonesia dengan informasi destinasi terintegrasi prakiraan cuaca. Temukan tempat wisata favorit dan ketahui kondisi cuaca sebelum berkunjung.">
     <meta name="keywords"
         content="wisata Indonesia, prakiraan cuaca wisata, destinasi wisata, perencanaan perjalanan, informasi wisata, cuaca destinasi wisata, pariwisata Indonesia">
-    <meta name="author" content="Nusatawan">
+    <meta name="author" content="Nusatarawisata-Kaltim">
     <meta name="robots" content="index, follow">
     <meta name="language" content="Indonesia">
 
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://www.nusatawan.com/">
-    <meta property="og:title" content="Nusatawan - Informasi Wisata & Prakiraan Cuaca Indonesia">
+    <meta property="og:title" content="Nusatarawisata-Kaltim - Informasi Wisata & Prakiraan Cuaca Indonesia">
     <meta property="og:description"
         content="Rencanakan perjalanan wisata Anda dengan informasi destinasi dan prakiraan cuaca terintegrasi di seluruh Indonesia.">
     <meta property="og:image" content="{{ asset('images/logo/nusatawan-logo.png') }}">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://www.nusatawan.com/">
-    <meta property="twitter:title" content="Nusatawan - Informasi Wisata & Prakiraan Cuaca Indonesia">
+    <meta property="twitter:title" content="Nusatarawisata-Kaltim - Informasi Wisata & Prakiraan Cuaca Indonesia">
     <meta property="twitter:description"
         content="Rencanakan perjalanan wisata Anda dengan informasi destinasi dan prakiraan cuaca terintegrasi di seluruh Indonesia.">
     <meta property="twitter:image" content="{{ asset('images/logo/nusatawan-logo.png') }}">
@@ -40,12 +38,11 @@
     <meta name="theme-color" content="#1e3a8a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Nusatawan">
+    <meta name="apple-mobile-web-app-title" content="Nusatarawisata-Kaltim">
 
     <!-- Metatags Tambahan untuk SEO -->
     <meta name="geo.region" content="ID">
     <meta name="geo.placename" content="Indonesia">
-    <link rel="canonical" href="https://www.nusatawan.com/">
 
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -172,7 +169,7 @@
                             </div>
                             <input type="email" id="email" name="email" value="{{ old('email') }}"
                                 class="pl-10 w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-                                placeholder="nusatawan@gmail.com" required>
+                                placeholder="nusatarawisata-kaltim@gmail.com" required>
                         </div>
                     </div>
 

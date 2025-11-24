@@ -128,14 +128,14 @@
         </div>
     </x-section>
 
-    {{-- Nusatawan Section --}}
+    {{-- Nusatarawisata-Kaltim Section --}}
     <div class="bg-primary py-24">
         <x-section>
             <div class="text-center ">
                 <h1 class="text-2xl md:text-4xl font-semibold mb-8 text-white">
                     Apa yang
                     <span class=" text-3xl md:text-5xl font-bold">
-                        Nusatawan
+                        Nusatarawisata-Kaltim
                     </span>
                     bawa untuk Anda?
                 </h1>
@@ -176,7 +176,7 @@
     {{-- Tombol CTA untuk smartphone --}}
     <div class="md:hidden fixed bottom-6 right-6 z-50 group">
         <!-- Main Button -->
-        <a href="{{ route('user.destination-submission.create') }}"
+        <a href="#"
             class="flex items-center justify-center bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-full w-16 h-16 shadow-lg hover:from-blue-700 hover:to-blue-600 transition-all duration-300 transform hover:scale-105">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor">
@@ -240,7 +240,7 @@
                             </div>
 
                             <a class="mt-6 inline-block rounded border border-blue-400 bg-blue-500 px-6 py-3 font-medium text-white shadow-lg transition-colors hover:bg-blue-600"
-                                href="{{ route('user.destination-submission.create') }}">
+                                href="#">
                                 <div class="flex items-center">
                                     <span>Bagikan Sekarang</span>
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none"
@@ -418,7 +418,7 @@
             <p class="text-gray-600 mb-4">Temukan tempat wisata tersembunyi yang belum banyak diketahui? Bantu wisatawan
                 lain dengan membagikan destinasi favoritmu!</p>
             <div class="flex justify-center">
-                <a href="{{ route('user.destination-submission.create') }}"
+                <a href="#"
                     class="inline-block rounded-lg bg-blue-500 px-6 py-3 text-white font-medium hover:bg-blue-600 transition-colors">
                     Ajukan Destinasi Sekarang
                 </a>
