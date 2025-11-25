@@ -101,6 +101,17 @@ class AuthController extends Controller
             // Regenerate session to prevent session fixation
             $request->session()->regenerate();
 
+            // Catat activity log
+            \App\Models\ActivityLog::create([
+                'user_id' => $user->id,
+                'action' => 'login',
+                'description' => 'User login',
+                'detail' => json_encode([
+                    'ip' => $request->ip(),
+                    'user_agent' => $request->userAgent(),
+                ]),
+            ]);
+
             // Redirect based on user role
             if ($user->isAdmin) {
                 return redirect()->intended(route('admin.dashboard'));
@@ -122,7 +133,17 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
+        $user = Auth::user();
         $this->authService->logout();
+
+        // Catat activity log logout
+        if ($user) {
+            \App\Models\ActivityLog::create([
+                'user_id' => $user->id,
+                'action' => 'logout',
+                'description' => 'User logout',
+            ]);
+        }
 
         // Invalidate the session
         $request->session()->invalidate();
