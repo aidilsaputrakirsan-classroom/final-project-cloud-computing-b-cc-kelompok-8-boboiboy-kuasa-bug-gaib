@@ -1,5 +1,6 @@
 <?php
 
+<<<<<<< HEAD
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DestinationController as AdminDestinationController;
@@ -154,4 +155,10 @@ Route::middleware('auth.admin')->prefix('admin')->name('admin.')->group(function
         Route::post('/{destinationSubmission}/approve', [AdminDestinationSubmissionController::class, 'approve'])->name('approve');
         Route::post('/{destinationSubmission}/reject', [AdminDestinationSubmissionController::class, 'reject'])->name('reject');
     });
+=======
+use Illuminate\Support\Facades\Route;
+
+Route::get('/', function () {
+    return view('welcome');
+>>>>>>> ab7e0c599b4ef5372ef2ffce9929c217b69ffa49
 });

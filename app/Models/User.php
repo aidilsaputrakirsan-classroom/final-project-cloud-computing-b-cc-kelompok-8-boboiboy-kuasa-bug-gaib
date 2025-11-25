@@ -21,9 +21,6 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'image',
-        'status',
-        'isAdmin',
     ];
 
     /**
@@ -47,35 +44,5 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
-    }
-
-    // Relasi dengan Destinations
-    public function likedDestinations()
-    {
-        return $this->hasMany(LikedDestination::class);
-    }
-
-    // Relasi dengan Reviews
-    public function reviews()
-    {
-        return $this->hasMany(Review::class);
-    }
-
-    // Relasi dengan Itineraries
-    public function itineraries()
-    {
-        return $this->hasMany(Itinerary::class);
-    }
-
-    // Relasi dengan Destination Submissions
-    public function destinationSubmissions()
-    {
-        return $this->hasMany(DestinationSubmission::class);
-    }
-
-    // relasi dengan destination
-    public function destinations()
-    {
-        return $this->hasMany(Destination::class, 'created_by');
     }
 }
