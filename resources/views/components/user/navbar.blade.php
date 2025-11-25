@@ -39,16 +39,17 @@
                         </div>
                         <ul class="py-2" aria-labelledby="user-menu-button">
                             <li>
-                                <a href="{{ route('profile.show') }}"
+                                <a href="{{ route('user.profile.show') }}"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profil</a>
                             </li>
                             <li>
-                                <a href="{{ route('profile.show') }}#destinasi"
+                                <a href="{{ route('user.profile.show') }}#destinasi"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">DestinasiKu</a>
                             </li>
-                            <!-- <li>
-                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Favorit</a>
-                            </li> -->
+                            <li>
+                                <a href="{{ route('user.destination-favorite.index') }}"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Favorit</a>
+                            </li>
                             <li>
                                 <form method="POST" action="{{ route('auth.logout') }}">
                                     @csrf
@@ -94,7 +95,7 @@
                             'label' => 'Destinasi',
                         ],
                         [
-                            'route' => 'user.itinerary.index', // Sudah ada route
+                            'route' => null, // Belum ada route, gunakan null
                             'name' => 'user.itinerary.index',
                             'label' => 'Rencana Perjalanan',
                         ],
