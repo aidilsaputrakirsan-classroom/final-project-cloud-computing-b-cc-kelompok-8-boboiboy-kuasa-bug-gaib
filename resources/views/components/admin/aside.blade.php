@@ -63,18 +63,31 @@
                 </a>
             </li>
 
-            {{-- Kategori --}}
+            <!-- Kategori -->
             <li>
                 <a href="{{ route('admin.categories.index') }}"
                     class="flex items-center p-2 rounded-lg transition group
                     {{ request()->routeIs('admin.categories.*') ? 'bg-gray-100 text-blue-600' : 'text-gray-900 hover:bg-gray-100' }}">
                     <svg class="w-5 h-5 {{ request()->routeIs('admin.categories.*') ? 'text-blue-600' : 'text-gray-500 group-hover:text-gray-900' }}"
-                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                        <path
-                            d="M21 3C21.5523 3 22 3.44772 22 4V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3H21ZM11 13H4V19H11V13ZM20 13H13V19H20V13ZM11 5H4V11H11V5ZM20 5H13V11H20V5Z">
-                        </path>
+                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
+                        <path d="M10 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16Zm0 14a6 6 0 1 1 0-12 6 6 0 0 1 0 12Z" />
                     </svg>
-                    <span class="flex-1 ms-3 whitespace-nowrap">Kategori</span>
+                    <span class="ms-3">Kategori</span>
+                </a>
+            </li>
+
+            <!-- Activity Logs -->
+            <li>
+                <a href="{{ route('admin.activity-logs.index') }}"
+                    class="flex items-center p-2 rounded-lg transition group
+                    {{ request()->routeIs('admin.activity-logs.*') ? 'bg-gray-100 text-blue-600' : 'text-gray-900 hover:bg-gray-100' }}">
+                    <svg class="w-5 h-5 {{ request()->routeIs('admin.activity-logs.*') ? 'text-blue-600' : 'text-gray-500 group-hover:text-gray-900' }}"
+                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M4 4h12v2H4V4zm0 4h12v2H4V8zm0 4h8v2H4v-2z" />
+                    </svg>
+                    <span class="ms-3">Activity Logs</span>
+                </a>
+            </li>
                 </a>
             </li>
         </ul>

@@ -1,83 +1,49 @@
 <?php
 
-<<<<<<< HEAD
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DestinationController as AdminDestinationController;
 use App\Http\Controllers\Admin\DestinationSubmissionController as AdminDestinationSubmissionController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\User\HomeController;
-use App\Http\Controllers\User\FavoriteController;
-use App\Http\Controllers\User\ReviewController;
 use App\Http\Controllers\User\DestinationController;
 use App\Http\Controllers\User\DestinationSubmissionController;
-use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\User\FavoriteController;
+use App\Http\Controllers\User\HomeController;
 use App\Http\Controllers\User\ItineraryController;
+use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\User\ReviewController;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Default Redirect
+| Web Routes
 |--------------------------------------------------------------------------
 |
-| Saat user mengakses root URL (/), sistem akan langsung mengarahkan ke
-| halaman login. Jika sudah login, Laravel akan otomatis melewati
-| middleware 'guest' dan menampilkan halaman sesuai hak aksesnya.
+| Here is where you can register web routes for your application.
+| These routes are loaded by the RouteServiceProvider and assigned to the
+| "web" middleware group. Make something great!
 |
 */
-Route::get('/', function () {
-    return redirect()->route('auth.login');
-});
 
-/*
-|--------------------------------------------------------------------------
-| Guest Routes (Belum Login)
-|--------------------------------------------------------------------------
-|
-| Semua route di bawah hanya bisa diakses oleh user yang belum login.
-|
-*/
+// login manual
+// Auth::login(User::find(1));
+
+// Auth routes - with guest middleware
 Route::middleware('guest')->group(function () {
     Route::name('auth.')->group(function () {
         Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
         Route::post('/login', [AuthController::class, 'login'])->name('login.post');
-
         Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
         Route::post('/register', [AuthController::class, 'register'])->name('register.post');
     });
 });
 
-/*
-|--------------------------------------------------------------------------
-| Authenticated Routes (Sudah Login)
-|--------------------------------------------------------------------------
-|
-| Semua route di sini hanya bisa diakses setelah user login.
-|
-*/
-Route::middleware('auth')->group(function () {
-                                Route::patch('/rencana-perjalanan/{itinerary}', [ItineraryController::class, 'update'])->name('user.itinerary.update');
-                            Route::delete('/rencana-perjalanan/destinasi/remove', function() {
-                                // Implementasi hapus destinasi dari itinerary, bisa diganti dengan controller sesuai kebutuhan
-                                return response()->json(['success' => true]);
-                            })->name('user.itinerary.destination.remove');
-                        Route::post('/rencana-perjalanan/destinasi/add', function() {
-                            // Implementasi tambah destinasi ke itinerary, bisa diganti dengan controller sesuai kebutuhan
-                            return response()->json(['success' => true]);
-                        })->name('user.itinerary.destination.add');
-                    Route::get('/rencana-perjalanan/destinasi/search-coordinates', function() {
-                        // Implementasi pencarian destinasi berdasarkan koordinat, bisa diganti dengan controller sesuai kebutuhan
-                        return response()->json([]);
-                    })->name('user.itinerary.destination.search.coordinates');
-                Route::get('/rencana-perjalanan/destinasi/search', function() {
-                    // Implementasi pencarian destinasi, bisa diganti dengan controller sesuai kebutuhan
-                    return response()->json([]);
-                })->name('user.itinerary.destination.search.name');
-            Route::get('/rencana-perjalanan/{itinerary}/edit', [ItineraryController::class, 'edit'])->name('user.itinerary.edit');
-        Route::delete('/rencana-perjalanan/{itinerary}', [ItineraryController::class, 'destroy'])->name('user.itinerary.destroy');
-    Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
-});
+// Logout route - with auth middleware
+Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
+
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('user.home');
 Route::get('/tentang', function () {
@@ -85,15 +51,6 @@ Route::get('/tentang', function () {
 })->name('user.about');
 
 // Destination Public Routes
-// Itinerary CRUD hanya untuk user yang sudah login
-Route::middleware('auth')->group(function () {
-    Route::get('/rencana-perjalanan', [ItineraryController::class, 'index'])->name('user.itinerary.index');
-    Route::get('/rencana-perjalanan/create', [ItineraryController::class, 'create'])->name('user.itinerary.create');
-    Route::post('/rencana-perjalanan', [ItineraryController::class, 'store'])->name('user.itinerary.store');
-    Route::get('/rencana-perjalanan/{itinerary}', [ItineraryController::class, 'show'])->name('user.itinerary.show');
-    // Tambahkan route edit, update, show, destroy jika diperlukan
-});
-
 Route::match(['get', 'post'], 'destinasi', [DestinationController::class, 'index'])
     ->name('user.destinations.index');
 
@@ -102,28 +59,58 @@ Route::resource('destinasi', DestinationController::class)
     ->parameters(['destinasi' => 'destination:slug'])
     ->names(['show' => 'user.destinations.show']);
 
-// Like/Unlike Destination
-Route::post('destinasi/{destination}/like', [DestinationController::class, 'like'])->name('user.destinations.like');
 
- // Destination Submission Routes
-    Route::prefix('pengajuan-destinasi')->name('destination-submission.')->group(function () {
-        Route::get('/', [DestinationSubmissionController::class, 'create'])->name('create');
-        Route::post('/', [DestinationSubmissionController::class, 'store'])->name('store');
-    });
-// Profile Routes
+// User routes - with auth.user middleware
+Route::middleware('auth.user')->name('user.')->group(function () {
+    // Profile Routes
     Route::prefix('profil')->name('profile.')->group(function () {
         Route::get('/', [ProfileController::class, 'show'])->name('show');
         Route::patch('/{user}', [ProfileController::class, 'update'])->name('update');
     });
-/*
-|--------------------------------------------------------------------------
-| Admin Routes (Khusus Admin)
-|--------------------------------------------------------------------------
-|
-| Menggunakan prefix 'admin' dan middleware 'auth.admin'.
-| Pastikan middleware 'auth.admin' sudah terdaftar di Kernel.php.
-|
-*/
+
+    // Itinerary Routes
+    Route::prefix('rencana-perjalanan')->name('itinerary.')->group(function () {
+        // Main Itinerary Routes
+        Route::get('/', [ItineraryController::class, 'index'])->name('index');
+        Route::get('/tambah-rencana', [ItineraryController::class, 'create'])->name('create');
+        Route::post('/', [ItineraryController::class, 'store'])->name('store');
+        Route::get('/{itinerary}', [ItineraryController::class, 'show'])->name('show');
+        Route::get('/{itinerary}/ubah', [ItineraryController::class, 'edit'])->name('edit');
+        Route::patch('/{itinerary}', [ItineraryController::class, 'update'])->name('update');
+        Route::delete('/{itinerary}', [ItineraryController::class, 'destroy'])->name('destroy');
+
+        // Itinerary Destination Routes
+        Route::post('/cari-destinasi-koordinat', [ItineraryController::class, 'searchDestinationsByCoordinates'])->name('destination.search.coordinates');
+        Route::post('/cari-destinasi-nama', [ItineraryController::class, 'searchDestinationsByName'])->name('destination.search.name');
+        Route::post('/tambah-destinasi', [ItineraryController::class, 'addDestinationItinerary'])->name('destination.add');
+        Route::post('/hapus-destinasi', [ItineraryController::class, 'removeDestinationFromItinerary'])->name('destination.remove');
+        Route::get('/destinasi/{id}/detail', [ItineraryController::class, 'getDestinationDetails'])->name('destination.detail');
+        Route::post('/destinasi/update', [ItineraryController::class, 'updateDestination'])->name('destination.update');
+    });
+
+    // Destination Submission Routes
+    Route::prefix('pengajuan-destinasi')->name('destination-submission.')->group(function () {
+        Route::get('/', [DestinationSubmissionController::class, 'create'])->name('create');
+        Route::post('/', [DestinationSubmissionController::class, 'store'])->name('store');
+    });
+
+    // Favorite Routes
+    Route::prefix('destinasi-favorit')->name('destination-favorite.')->group(function () {
+        Route::get('/', [FavoriteController::class, 'index'])->name('index');
+    });
+
+    // Destination & Review Routes
+    Route::group(['prefix' => 'destinasi/{destination}'], function () {
+        // Like/Unlike Routes
+        Route::post('like', [DestinationController::class, 'like'])->name('destinations.like');
+        Route::delete('unlike', [DestinationController::class, 'unlike'])->name('destinations.unlike');
+
+        // Review Routes
+        Route::post('reviews', [ReviewController::class, 'store'])->name('reviews.store');
+    });
+});
+
+// Admin routes - with auth.admin middleware
 Route::middleware('auth.admin')->prefix('admin')->name('admin.')->group(function () {
     // Dashboard
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -142,6 +129,10 @@ Route::middleware('auth.admin')->prefix('admin')->name('admin.')->group(function
     Route::delete('destinasi/{destination}/image/{image}', [AdminDestinationController::class, 'destroyImage'])
         ->name('destinations.image.destroy');
 
+    // Review Management
+    Route::delete('destinasi/{destination}/reviews/{review}', [ReviewController::class, 'destroy'])
+        ->name('destinations.reviews.destroy');
+
     // Category Management
     Route::resource('kategori', CategoryController::class)
         ->parameters(['kategori' => 'category'])
@@ -155,10 +146,7 @@ Route::middleware('auth.admin')->prefix('admin')->name('admin.')->group(function
         Route::post('/{destinationSubmission}/approve', [AdminDestinationSubmissionController::class, 'approve'])->name('approve');
         Route::post('/{destinationSubmission}/reject', [AdminDestinationSubmissionController::class, 'reject'])->name('reject');
     });
-=======
-use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
->>>>>>> ab7e0c599b4ef5372ef2ffce9929c217b69ffa49
+    // Activity Logs
+    Route::get('activity-logs', [\App\Http\Controllers\Admin\ActivityLogController::class, 'index'])->name('activity-logs.index');
 });
