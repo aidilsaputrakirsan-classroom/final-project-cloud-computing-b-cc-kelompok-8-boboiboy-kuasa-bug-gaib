@@ -1,0 +1,67 @@
+name: Deploy Laravel to Server via RSYNC
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: "8.2"
+        extensions: mbstring, intl, mysql, bcmath
+        tools: composer
+
+    - name: Install Composer Dependencies
+      run: composer install --no-dev --optimize-autoloader
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: "18"
+
+    - name: Install NPM dependencies
+      run: npm install
+
+    - name: Build Assets
+      run: npm run build
+
+    - name: Add SSH Key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/deploy_key
+        chmod 600 ~/.ssh/deploy_key
+
+    - name: Add server to known hosts
+      run: ssh-keyscan -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+    - name: Deploy via RSYNC
+      run: |
+        rsync -azP \
+        --exclude=".git" \
+        --exclude="node_modules" \
+        --exclude="tests" \
+        --delete \
+        -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT }}" \
+        ./ \
+        ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.APP_PATH }}
+
+    - name: Run deployment commands on server
+      run: |
+        ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT }} \
+        ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+        cd ${{ secrets.APP_PATH }}
+        php artisan down || true
+        composer install --no-dev --optimize-autoloader
+        php artisan migrate --force
+        php artisan optimize:clear
+        php artisan optimize
+        php artisan up
+        EOF
