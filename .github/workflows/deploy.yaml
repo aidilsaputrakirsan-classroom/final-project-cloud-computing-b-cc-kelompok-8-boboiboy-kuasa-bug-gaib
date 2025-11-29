@@ -40,7 +40,10 @@ jobs:
         chmod 600 ~/.ssh/deploy_key
 
     - name: Add server to known hosts
-      run: ssh-keyscan -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+      run: |
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -T 10 -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts 2>/dev/null || true
 
     - name: Deploy via RSYNC
       run: |
