@@ -15,7 +15,7 @@
                     <rect x="0" y="0" width="100%" height="100%" fill="url(#dots)" />
                 </svg>
                 <div class="absolute inset-0 flex items-center justify-center">
-                    <h1 class="text-4xl md:text-5xl font-bold text-white text-center">Temukan Indonesia Bersama Kami</h1>
+                    <h1 class="text-4xl md:text-5xl font-bold text-white text-center">Temukan Indonesia Bersama Team BoBoiBoy - Kelompok 8</h1>
                 </div>
             </div>
         </div>
