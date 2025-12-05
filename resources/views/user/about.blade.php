@@ -15,7 +15,7 @@
                     <rect x="0" y="0" width="100%" height="100%" fill="url(#dots)" />
                 </svg>
                 <div class="absolute inset-0 flex items-center justify-center">
-                    <h1 class="text-4xl md:text-5xl font-bold text-white text-center">Temukan Indonesia Bersama Kami</h1>
+                    <h1 class="text-4xl md:text-5xl font-bold text-white text-center">Temukan Indonesia Bersama Team BoBoiBoy - Kelompok 8</h1>
                 </div>
             </div>
         </div>
@@ -25,16 +25,6 @@
         <!-- Sejarah Platform -->
         <div class="mb-16 text-center">
             <h2 class="text-3xl font-bold mb-6">Perjalanan <span class="text-primary">Kami</span></h2>
-            <p class="text-gray-700 max-w-3xl mx-auto">
-                Platform ini lahir dari kesadaran akan pentingnya informasi akurat tentang destinasi wisata Indonesia.
-                Dikembangkan pertama kali pada 2023 sebagai bagian program Studi Independen Bersertifikat Dicoding Batch 6
-                bersama <a href="https://www.linkedin.com/in/aufaahusniati/"
-                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline" target="_blank">Aufaa
-                    Husniati</a> dan <a href="https://www.linkedin.com/in/adriansyah-anca-197270214/"
-                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline" target="_blank">Adriansyah
-                    Anca</a>.
-
-            </p>
             <p class="text-gray-700 max-w-3xl mx-auto">
                 Awalnya, platform ini hanya menyajikan informasi destinasi wisata secara umum. Kini, sebagai proyek skripsi,
                 saya mengembangkannya dengan menambahkan fitur prakiraan cuaca untuk setiap destinasi, membantu wisatawan
