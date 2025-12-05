@@ -1,9 +1,7 @@
 # Nusatarawisata-Kaltim - Sistem Informasi Perencanaan Wisata Kalimantan Timur
 
 ![Laravel](https://img.shields.io/badge/Laravel-12.0-FF2D20?style=flat&logo=laravel&logoColor=white)
-![Livewire](https://img.shields.io/badge/Livewire-3.5-4E56A6?style=flat&logo=livewire&logoColor=white)
 ![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=flat&logo=php&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-green.svg)
 
 Nusatarawisata-Kaltim adalah sebuah aplikasi web berbasis Laravel untuk yang digunakan sebagai Media untuk mengumpulkan informasi terkait wisata yang ada di Kalimantan Timur. Aplikasi ini dapat memberikan akses informasi destinasi wisata, merencanakan perjalanan wisata dan mengelola keseluruhan data destinasi wisata yang ada di Kalimatan Timur. 
 
@@ -13,11 +11,8 @@ Nusatarawisata-Kaltim adalah sebuah aplikasi web berbasis Laravel untuk yang dig
 - [Tech Stack](#tech-stack)
 - [Persyaratan Sistem](#persyaratan-sistem)
 - [Instalasi](#instalasi)
-- [Konfigurasi](#konfigurasi)
 - [Role & Permissions](#role--permissions)
 - [Fitur Berdasarkan Role](#fitur-berdasarkan-role)
-- [Generate PDF](#generate-pdf)
-- [Import Data](#import-data)
 - [Screenshot](#screenshot)
 - [Struktur Database](#struktur-database)
 - [Penggunaan](#penggunaan)
@@ -27,89 +22,62 @@ Nusatarawisata-Kaltim adalah sebuah aplikasi web berbasis Laravel untuk yang dig
 
 ## Fitur Utama
 
-### Manajemen Tugas Akhir
-- ✅ **Pengajuan Judul TA** - Mahasiswa dapat mengajukan judul tugas akhir
-- ✅ **Pencatatan Bimbingan** - Sistem pencatatan progress bimbingan mahasiswa dengan dosen
-- ✅ **Seminar Proposal** - Pendaftaran dan penjadwalan seminar proposal
-- ✅ **Sidang Tugas Akhir** - Pendaftaran dan penjadwalan sidang TA
-- ✅ **Penilaian** - Entry nilai sempro dan sidang TA oleh dosen penguji
-- ✅ **Katalog TA** - Repositori tugas akhir yang sudah selesai
-- ✅ **Referensi & Prosedur** - Panduan dan referensi untuk mahasiswa
+### Halaman Admin
+- ✅ **Dashboard** - Menampilkan data yang ada pada sistem dalam bentuk statistik
+- ✅ **Kelola Pengguna** - CRUD untuk akun Pengguna yang digunakan pada sistem dan disertakan pencarian/filter
+- ✅ **Kelola Destinasi** - CRUD untuk Destinasi Wisata yang ditampilkan pada halaman Destinasi dan disertakan pencarian/filter
+- ✅ **Pengajuan Destinasi** - Melihat Pengajuan Destinasi yang dimasukkan pengguna 
+- ✅ **Kelola Kategori** - CRUD untuk Kategori yang digunakan untuk mengelompokkan Kategori dan disertakan pencarian/filter
+- ✅ **Activity Log** - Menampilkan history dari Akun yang melakukan Login dan Logout pada sistem.
 
-### Manajemen Data
-- ✅ **Data Dosen** - CRUD data dosen dengan import Excel
-- ✅ **Data Mahasiswa** - CRUD data mahasiswa dengan import Excel
-- ✅ **Periode Akademik** - Manajemen periode TA dan Sempro
-
-### Penjadwalan
-- ✅ **Jadwal Seminar Proposal** - Penjadwalan dan monitoring sempro
-- ✅ **Jadwal Sidang TA** - Penjadwalan dan monitoring sidang
-- ✅ **Monitoring Real-time** - Tracking status pengajuan secara real-time
-
-### Dokumentasi
-- ✅ **Generate PDF** - Berbagai form TA, jadwal, dan berita acara
-- ✅ **Template Excel** - Template import untuk data dosen, mahasiswa, dan katalog
-- ✅ **Export Data** - Export data dalam format Excel dan PDF
-
-### Fitur Modern
-- ✅ **Dark Mode** - Dukungan tema gelap dan terang dengan switching dinamis
-- ✅ **Real-time Notifications** - Sistem notifikasi real-time untuk update status
-- ✅ **Dashboard Analytics** - Chart cohort dan statistik visual
-- ✅ **Responsive Design** - Mobile-first design dengan hamburger menu
-- ✅ **Design Token System** - Sistem desain modern dengan color palette 2025
+### Halaman Utama
+- ✅ **Beranda** - Menampilkan Informasi umum terkait sistem dan FAQ
+- ✅ **Destinasi** - Menampilkan daftar destinasi yang ada pada Kalimatan Timur, tersedia fitur pencarian/filter
+- ✅ **Rencana Perjalanan** - CRUD untuk Rencana Perjalanan dan disertakan pencarian/filter
+- ✅ **Register** - Membuat akun untuk sistem
+- ✅ **Login** - Masuk akun dengan hak akses
 
 ## Tech Stack
-
 ### Backend
 - **Laravel 12.0** - PHP Framework
-- **Livewire 3.5** - Full-stack framework untuk Laravel (includes Alpine.js)
-- **Spatie Laravel Permission 6.7** - Role dan permission management
-- **MySQL** - Database
+- **PostgreSQL (Supabase)** - Database
 
-### Frontend
-- **Bootstrap 5** - CSS Framework
-- **Sass 1.43.4** - CSS Preprocessor dengan design token system
-- **Material Design Icons (MDI)** - Icon library
-- **Font Awesome** - Additional icon library
-- **jQuery** - For DataTables plugin
-- **Alpine.js** - JavaScript framework (included via Livewire)
-- **Dark Mode Support** - Dynamic theme switching (light/dark)
+### Frontend  
+- **HTML5** - Markup language untuk struktur web
+- **Tailwind CSS** - Utility-first CSS framework untuk styling yang efisien
 
-### Libraries & Packages
-- **Barryvdh DomPDF 3.0** - PDF generation
-- **Maatwebsite Excel 3.1** - Excel import/export
-- **Laravel Sanctum 4.0** - API authentication
-- **League Flysystem AWS S3** - File storage
-- **Laravel Mix 6.0** - Asset bundling and compilation
-- **Guzzle HTTP 7.8** - HTTP client
-- **PHPUnit 11.0** - Testing framework
-- **Spatie Ignition** - Enhanced error pages
+### Tools & Development
+- **Composer** - Dependency manager untuk PHP
+- **NPM** - Package manager untuk JavaScript
+- **Git** - Version control system
 
 ## Persyaratan Sistem
 
 - PHP >= 8.2
-- MySQL >= 5.7 atau MariaDB >= 10.3
+- PostgreSQL (Supabase)
 - Composer
 - Node.js & NPM
 - Web Server (Apache/Nginx)
 - Extension PHP yang dibutuhkan:
-  - OpenSSL
-  - PDO
-  - Mbstring
-  - Tokenizer
-  - XML
-  - Ctype
-  - JSON
-  - BCMath
-  - GD atau Imagick
+  - openssl
+  - pdo
+  - pdo_pgsql
+  - mbstring
+  - tokenizer
+  - ctype
+  - json
+  - fileinfo
+  - curl
+  - xml
+  - gd / imagick
 
 ## Instalasi
 
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/aidilsaputrakirsan/sitasi-itk.git
-cd sitasi-itk
+git clone https://github.com/username/nusatarawisata-kaltim.git
+cd nusatarawisata-kaltim
 ```
 
 ### 2. Install Dependencies
@@ -137,12 +105,10 @@ php artisan key:generate
 Edit file `.env` dan sesuaikan konfigurasi database:
 
 ```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=sitasiitk
-DB_USERNAME=root
-DB_PASSWORD=your_password
+APP_KEY=base64:G+Z7R12QygCF4kgGe22wUmgdG3CPtKzu7GrawgQw44c=
+
+DB_CONNECTION=pgsql
+DB_URL=postgresql://postgres.hromnfbnrwofzdefwiim:PI8cfI9seGL4mP2X@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres
 ```
 
 ### 5. Migrasi Database
@@ -181,167 +147,82 @@ php artisan serve
 
 Aplikasi akan berjalan di `http://localhost:8000`
 
-## Konfigurasi
-
-### Email Configuration
-
-Edit konfigurasi email di file `.env`:
-
-```env
-MAIL_MAILER=smtp
-MAIL_HOST=smtp.gmail.com
-MAIL_PORT=587
-MAIL_USERNAME=your-email@gmail.com
-MAIL_PASSWORD=your-app-password
-MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS=noreply@sitasi-itk.ac.id
-MAIL_FROM_NAME="SITASI ITK"
-```
-
-### File Storage
-
-Untuk menggunakan AWS S3 storage, konfigurasi:
-
-```env
-AWS_ACCESS_KEY_ID=your-access-key
-AWS_SECRET_ACCESS_KEY=your-secret-key
-AWS_DEFAULT_REGION=ap-southeast-1
-AWS_BUCKET=your-bucket-name
-```
-
 ## Role & Permissions
 
-Sistem menggunakan 4 role utama dengan permission berbeda:
+Sistem menggunakan 2 role utama dengan permission berbeda:
 
 | Role | Deskripsi |
 |------|-----------|
-| **Mahasiswa** | Mahasiswa yang mengerjakan tugas akhir |
-| **Dosen** | Dosen pembimbing dan penguji |
-| **Tendik** | Tenaga Kependidikan (Admin) |
-| **Koorpro** | Koordinator Program Studi |
+| **Admin** | Admin  |
+| **Pengguna** | Pengguna Umum |
 
 ## Fitur Berdasarkan Role
 
-### Mahasiswa
-- 📝 Pengajuan judul tugas akhir
-- 📚 Pencatatan bimbingan dengan dosen
-- 📅 Pendaftaran seminar proposal
-- 🎓 Pendaftaran sidang tugas akhir
-- 📖 Akses katalog TA
-- 📋 Lihat referensi dan prosedur
-- 👤 Manajemen profil
+### Admin
+- ✅ Mengelola (CRUD) data Destinasi
+- ✅ Mengelola (CRUD) data Pengguna
+- ✅ Mengelola (CRUD) data Kategori
+- ✅ Melihat data Pengajuan Destinasi
+- ✅ Melihat data Activity Log
+- ✅ Melihat data pada Dashboard
+- ✅ Melakukan Login dan Registrasi Akun
 
-### Dosen
-- 👥 Lihat daftar mahasiswa bimbingan
-- ✅ Validasi dan approve bimbingan
-- 📊 Entry penilaian sempro dan sidang
-- 📑 Lihat jadwal sempro dan sidang
-- 📖 Akses dan kontribusi katalog TA
-- 🔍 Monitoring progress mahasiswa
-
-### Tendik (Admin)
-- 👨‍🏫 **Data Master**
-  - CRUD data dosen
-  - CRUD data mahasiswa
-  - Import data via Excel
-- 📅 **Penjadwalan**
-  - Manajemen periode akademik
-  - Penjadwalan seminar proposal
-  - Penjadwalan sidang tugas akhir
-  - Monitoring real-time
-- 📚 **Konten**
-  - Manajemen katalog TA
-  - Manajemen referensi
-  - Manajemen prosedur
-- 📄 **Dokumentasi**
-  - Generate berbagai form dan surat
-  - Export data Excel/PDF
-
-### Koorpro (Koordinator Program Studi)
-- Semua akses yang dimiliki Tendik
-- 📊 Dashboard analytics
-- 📈 Laporan dan statistik
-- 🎯 Monitoring keseluruhan proses TA
-
-## Generate PDF
-
-Aplikasi dapat generate berbagai dokumen PDF:
-
-### Form Tugas Akhir
-- **Form TA-001** - Form Pengajuan Judul TA
-- **Form TA-002** - Form Persetujuan Judul TA
-- **Form TA-006** - Form Permohonan Seminar Proposal
-- **Form TA-007** - Form Permohonan Sidang TA
-- **Form TA-008** - Form Lembar Konsultasi
-
-### Dokumen Jadwal
-- **Jadwal Seminar Proposal** - Jadwal lengkap sempro per periode
-- **Jadwal Sidang TA** - Jadwal lengkap sidang per periode
-
-### Berita Acara
-- **Berita Acara Seminar Proposal**
-- **Berita Acara Sidang Tugas Akhir**
-- **Lembar Persetujuan Revisi**
-- **Surat Kesanggupan Revisi**
-
-## Import Data
-
-### Template Excel
-
-Aplikasi menyediakan template Excel untuk import data:
-
-1. **Dosen Template.xlsx** - Template import data dosen
-2. **Mahasiswa Template.xlsx** - Template import data mahasiswa
-3. **Katalog Template.xlsx** - Template import data katalog TA
-
-Template dapat diunduh dari folder `/public/` atau melalui menu import di aplikasi.
-
-### Cara Import
-
-1. Download template yang sesuai
-2. Isi data sesuai format template
-3. Upload file Excel melalui halaman import
-4. Sistem akan validasi dan import data secara otomatis
+### Pengguna Umum
+- ✅ Melihat informasi terkait sistem
+- ✅ Melihat informasi terkait destinasi
+- ✅ Melakukan CRUD untuk rencana perjalanan
+- ✅ Melakukan Login dan Registrasi Akun
 
 ## Screenshot
 
 ### 1. Halaman Login
-![Halaman Login](public/images/screenshots/01-login.png)
+![Halaman Login](public/images/screenshots/01-G.jpeg)
 *Halaman login dengan form email dan password*
 
-### 2. Dashboard Mahasiswa
-![Dashboard Mahasiswa](public/images/screenshots/02-dashboard-mahasiswa.png)
-*Dashboard mahasiswa dengan ringkasan status TA*
+### 2. Halaman Register
+![Halaman Register](public/images/screenshots/01-F.jpeg)
+*Halaman register membuat akun baru*
 
-### 3. Pengajuan Judul TA
-![Pengajuan Judul TA](public/images/screenshots/03-pengajuan-judul-ta.png)
-*Form pengajuan judul tugas akhir*
+### 3. Halaman Dashboard Admin
+![Halaman Dashboard](public/images/screenshots/01-H.jpeg)
+*Halaman Dashboard untuk melihat data dalam statistik*
 
-### 4. Halaman Bimbingan
-![Halaman Bimbingan](public/images/screenshots/04-halaman-bimbingan.png)
-*Halaman pencatatan bimbingan dengan dosen*
+### 4. Halaman Kelola Pengguna
+![Halaman Kelola Pengguna](public/images/screenshots/01-I.jpeg)
+*Halaman untuk mengelola data pengguna*
 
-### 5. Dashboard Dosen
-![Dashboard Dosen](public/images/screenshots/05-dashboard-dosen.png)
-*Dashboard dosen dengan daftar mahasiswa bimbingan*
+### 5. Halaman Kelola Destinasi
+![Halaman Kelola Destinasi](public/images/screenshots/01-J.jpeg)
+*Halaman untuk mengelola data Destinasi*
 
-### 6. Penjadwalan Sempro
-![Penjadwalan Sempro](public/images/screenshots/06-penjadwalan-sempro.png)
-*Halaman penjadwalan seminar proposal*
+### 6. Halaman Pengajuan Destinasi
+![Halaman Pengajuan Destinasi](public/images/screenshots/01-K.jpeg)
+*Halaman untuk melihat data pengajuan destinasi*
 
-### 7. Data Mahasiswa (Admin)
-![Data Mahasiswa Admin](public/images/screenshots/07-data-mahasiswa-admin.png)
-*Halaman manajemen data mahasiswa dengan fitur import*
+### 7. Halaman Kelola Kategori
+![Halaman Kelola Kategori](public/images/screenshots/01-L.jpeg)
+*Halaman untuk mengelola data kategori*
 
-### 8. Generate PDF
-![Generate PDF](public/images/screenshots/08-generate-pdf.png)
-*Contoh dokumen PDF yang dihasilkan*
+### 8. Halaman Activity Log
+![Halaman Activity Log](public/images/screenshots/01-M.jpeg)
+*Halaman untuk melihat data activity log*
 
-### 9. Katalog TA
-![Katalog TA](public/images/screenshots/09-katalog-ta.png)
-*Halaman katalog tugas akhir*
+### 9. Halaman Beranda
+![Halaman Beranda](public/images/screenshots/01-A.jpeg)
+![Halaman Beranda](public/images/screenshots/01-B.jpeg)
+![Halaman Beranda](public/images/screenshots/01-C.jpeg)
+![Halaman Beranda](public/images/screenshots/01-D.jpeg)
+*Halaman untuk melihat informasi sistem*
 
-## Struktur Database
+### 10. Halaman Destinasi
+![Halaman Destinasi](public/images/screenshots/01-E.jpeg)
+*Halaman untuk melihat informasi Destinasi*
+
+### 11. Halaman Rencana Perjalanan
+![Halaman Rencana Perjalanan](public/images/screenshots/01-N.jpeg)
+*Halaman untuk membuat rencana perjalanan*
+
+## Struktur Database (BELUM)
 
 ### Tabel Utama
 
@@ -389,46 +270,12 @@ sidang_tas (1) ─── (n) penilaian_sidang_tas
 
 Aplikasi ini menggunakan **Livewire-heavy architecture** dengan 34+ komponen interaktif yang menggantikan kebutuhan AJAX tradisional:
 
-- **Controllers (12)** - Business logic dan routing
-- **Livewire Components (34+)** - Full-stack reactive components
-- **Models (19)** - Eloquent ORM models dengan relationships
-- **Services** - PdfService untuk centralized PDF generation
+- **Controllers** - Handle HTTP requests, delegate ke Services
+- **Request** - Form validation requests
+- **Models** - Eloquent models untuk database interaction
+- **Services** - Menangani logika bisnis utama controller
+- **Providers** - Service providers untuk dependency injection
 - **Traits** - Reusable logic (NotifikasiTraits, UpdateDeleteTraits, PeriodeTraits)
-- **Imports/Exports** - Excel handling untuk batch operations
-
-### Fitur Teknis Unggulan
-
-- **Real-time Reactivity** - Livewire + Alpine.js untuk interactive UI
-- **Role-based Access Control** - Spatie Permission dengan 4 roles
-- **Custom Notification System** - Real-time notifications dengan trait
-- **PDF Generation** - DomPDF untuk 11+ jenis dokumen
-- **Excel Operations** - Import/export dengan validasi
-- **Design Token System** - Modern CSS architecture dengan dark mode
-- **Responsive Mobile-First** - Optimized untuk semua device
-
-## Testing
-
-### Test Framework
-
-Aplikasi dilengkapi dengan **PHPUnit 11.0** untuk unit dan feature testing:
-
-```bash
-# Jalankan semua tests
-php artisan test
-
-# Jalankan dengan coverage
-php artisan test --coverage
-
-# Jalankan test spesifik
-php artisan test --filter=NamaTest
-```
-
-### Konfigurasi Test
-
-- **Test Database**: SQLite in-memory untuk isolasi
-- **Test Suites**: Unit tests dan Feature tests
-- **Mock Services**: Mail, Queue menggunakan array/sync driver
-- **Coverage**: Enabled untuk monitoring code quality
 
 ## Penggunaan
 
@@ -438,61 +285,24 @@ Setelah instalasi dan seeding database, Anda dapat login dengan akun default yan
 
 ### Workflow Umum
 
-1. **Admin** membuat periode akademik baru
-2. **Admin** menginput data mahasiswa dan dosen
-3. **Mahasiswa** login dan mengajukan judul TA
-4. **Dosen** mereview dan approve pengajuan
-5. **Mahasiswa** melakukan bimbingan dan mencatat progress
-6. **Mahasiswa** mendaftar sempro setelah syarat terpenuhi
-7. **Admin** membuat jadwal sempro
-8. **Dosen** memberikan penilaian sempro
-9. **Mahasiswa** melanjutkan bimbingan dan mendaftar sidang TA
-10. **Admin** membuat jadwal sidang TA
-11. **Dosen** memberikan penilaian sidang
-12. **Admin** menambahkan ke katalog TA setelah lulus
+1. **Admin** menambahkan data kategori
+2. **Admin** menambahkan data destinasi
+3. **Pengguna** register dan login akun
+4. **Admin** melihat activity log
+5. **Pengguna** melihat informasi sistem
+6. **Pengguna** melihat informasi destinasi
+7. **Pengguna** membuat rencana perjalanan
+8. **Admin** melihat pengajuan destinasi
 
 ## Deployment
 
 ### Requirements Production
 
 - PHP 8.2 atau lebih tinggi
-- MySQL/MariaDB
+- PostgreSQL (Supabase)
 - Composer
 - Node.js & NPM
 - Web server dengan SSL certificate
-
-### Production Setup
-
-1. Clone repository ke server
-2. Install dependencies
-3. Setup environment production
-4. Optimize aplikasi:
-
-```bash
-# Optimize configuration
-php artisan config:cache
-
-# Optimize routes
-php artisan route:cache
-
-# Optimize views
-php artisan view:cache
-
-# Optimize autoloader
-composer install --optimize-autoloader --no-dev
-```
-
-5. Setup cron job untuk scheduled tasks:
-
-```bash
-* * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
-```
-
-6. Setup queue worker (optional):
-
-```bash
-php artisan queue:work --daemon
-```
 
 ### GitHub Actions
 
@@ -508,23 +318,9 @@ Kontribusi selalu diterima! Silakan ikuti langkah berikut:
 4. Push ke branch (`git push origin feature/AmazingFeature`)
 5. Buat Pull Request
 
-### Coding Standards
-
-- Ikuti PSR-12 coding standard
-- Gunakan meaningful variable dan function names
-- Tambahkan komentar untuk logika yang kompleks
-- Write clean dan maintainable code
-
 ## Lisensi
 
 Project ini dilisensikan di bawah [MIT License](LICENSE).
-
-## Credits
-
-- **Laravel Framework** - [https://laravel.com](https://laravel.com)
-- **Livewire** - [https://livewire.laravel.com](https://livewire.laravel.com)
-- **Soft UI Dashboard** - [https://www.creative-tim.com](https://www.creative-tim.com)
-- **Spatie Laravel Permission** - [https://spatie.be](https://spatie.be)
 
 ## Support
 
