@@ -64,29 +64,33 @@ class DestinationGeoService
             $baseQuery->where('category_id', $categoryId);
         }
 
-
         // Eager load relasi
         $baseQuery->with('images');
 
         // Convert baseQuery ke subQuery SQL
         $subQuery = $baseQuery->toSql();
 
+        // PERBAIKAN: Buat formula jarak sebagai variable untuk digunakan ulang
+        $distanceFormula = "
+            6371 * acos(
+                cos(radians(?)) *
+                cos(radians(latitude)) *
+                cos(radians(longitude) - radians(?)) +
+                sin(radians(?)) *
+                sin(radians(latitude))
+            )
+        ";
+
         // Hitung jarak pakai Haversine formula
         $query = DB::table(DB::raw("({$subQuery}) as base_destinations"))
             ->mergeBindings($baseQuery->getQuery())
-            ->selectRaw("base_destinations.*, (
-                6371 * acos(
-                    cos(radians(?)) *
-                    cos(radians(latitude)) *
-                    cos(radians(longitude) - radians(?)) +
-                    sin(radians(?)) *
-                    sin(radians(latitude))
-                )
-            ) AS distance", [$lat, $lng, $lat]);
+            ->selectRaw("base_destinations.*, ({$distanceFormula}) AS distance", [$lat, $lng, $lat]);
 
-        // Filter: Jarak maksimum
+        // PERBAIKAN: Filter jarak maksimum menggunakan whereRaw dengan formula lengkap
+        // Ini mengatasi masalah PostgreSQL yang tidak bisa menggunakan alias di HAVING pada subquery
         if ($maxDistance) {
-            $query->havingRaw("distance <= ?", [$maxDistance]);
+            // Gunakan whereRaw dengan formula lengkap, bukan havingRaw dengan alias
+            $query->whereRaw("({$distanceFormula}) <= ?", [$lat, $lng, $lat, $maxDistance]);
         }
 
         // Menerapkan pengurutan berdasarkan sort_by dengan pattern if-elseif-else
@@ -152,9 +156,19 @@ class DestinationGeoService
      */
     public function getNearbyDestinationRaws(float $lat, float $lng, float $radiusKm = 50)
     {
-        // Hitung jarak pakai Haversine formula
+        // PERBAIKAN: Gunakan parameter binding untuk keamanan
+        $distanceFormula = "
+            6371 * acos(
+                cos(radians(?)) *
+                cos(radians(latitude)) *
+                cos(radians(longitude) - radians(?)) +
+                sin(radians(?)) *
+                sin(radians(latitude))
+            )
+        ";
+
         return Destination::select('*')
-            ->whereRaw("(6371 * acos(cos(radians($lat)) * cos(radians(latitude)) * cos(radians(longitude) - radians($lng)) + sin(radians($lat)) * sin(radians(latitude)))) < ?", [$radiusKm])
+            ->whereRaw("({$distanceFormula}) < ?", [$lat, $lng, $lat, $radiusKm])
             ->with('images')
             ->get();
     }
@@ -173,6 +187,13 @@ class DestinationGeoService
     {
         // Kita perlu mengonversi item-item dari stdClass ke model Destination
         $items = $paginator->items();
+
+        // PERBAIKAN: Handle empty items
+        if (empty($items)) {
+            $paginator->setCollection(collect([]));
+            return;
+        }
+
         $destinationIds = array_column($items, 'id');
 
         // Ambil destinasi dengan eager loading

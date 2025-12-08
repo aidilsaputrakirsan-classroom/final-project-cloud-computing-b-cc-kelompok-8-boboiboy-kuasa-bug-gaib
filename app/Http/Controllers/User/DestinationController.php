@@ -110,19 +110,30 @@ class DestinationController extends Controller
         // Ambil data ulasan
         $reviewData = $this->getDestinationReviewData($destination->id);
 
-        // Ambil data cuaca
-        $weatherData = $this->getDestinationWeatherData(
-            $destination->latitude,
-            $destination->longitude
-        );
+        // Ambil data cuaca (hanya jika koordinat valid)
+        $weatherData = [
+            'currentWeather' => null,
+            'todayForecast' => null,
+            'weekForecast' => null
+        ];
+        
+        if ($destination->latitude && $destination->longitude) {
+            $weatherData = $this->getDestinationWeatherData(
+                (float) $destination->latitude,
+                (float) $destination->longitude
+            );
+        }
 
-        // Ambil Destinasi terdekat
-        $nearbyDestinations = $this->destinationService->getNearbyDestinations([
-            'lat' => $destination->latitude,
-            'lng' => $destination->longitude,
-            'max_distance' => 20,
-            'per_page' => 10
-        ]);
+        // Ambil Destinasi terdekat (hanya jika koordinat valid)
+        $nearbyDestinations = collect([]);
+        if ($destination->latitude && $destination->longitude) {
+            $nearbyDestinations = $this->destinationService->getNearbyDestinations([
+                'lat' => $destination->latitude,
+                'lng' => $destination->longitude,
+                'max_distance' => 20,
+                'per_page' => 10
+            ]);
+        }
 
         return view('user.destination-detail', array_merge(
             ['destination' => $destination],
@@ -218,6 +229,32 @@ class DestinationController extends Controller
      */
     private function getDestinationWeatherData(float $latitude, float $longitude): array
     {
+        // Validate coordinates
+        if (!is_numeric($latitude) || !is_numeric($longitude)) {
+            \Log::warning('Invalid coordinates for weather data', [
+                'lat' => $latitude,
+                'lng' => $longitude
+            ]);
+            return [
+                'currentWeather' => null,
+                'todayForecast' => null,
+                'weekForecast' => null
+            ];
+        }
+
+        // Validate coordinate ranges
+        if ($latitude < -90 || $latitude > 90 || $longitude < -180 || $longitude > 180) {
+            \Log::warning('Coordinates out of valid range', [
+                'lat' => $latitude,
+                'lng' => $longitude
+            ]);
+            return [
+                'currentWeather' => null,
+                'todayForecast' => null,
+                'weekForecast' => null
+            ];
+        }
+
         $currentWeather = $this->getCurrentWeather($latitude, $longitude);
 
         $forecast = $this->weatherService->getForecast(

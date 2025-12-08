@@ -23,14 +23,6 @@
 
     <div class="max-w-screen-xl mx-auto py-12 px-4">
         <!-- Sejarah Platform -->
-        <div class="mb-16 text-center">
-            <h2 class="text-3xl font-bold mb-6">Perjalanan <span class="text-primary">Kami</span></h2>
-            <p class="text-gray-700 max-w-3xl mx-auto">
-                Awalnya, platform ini hanya menyajikan informasi destinasi wisata secara umum. Kini, sebagai proyek skripsi,
-                saya mengembangkannya dengan menambahkan fitur prakiraan cuaca untuk setiap destinasi, membantu wisatawan
-                merencanakan perjalanan lebih aman dan nyaman dengan informasi cuaca real-time.
-            </p>
-        </div>
 
         <!-- Visi & Misi -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-16">
