@@ -12,20 +12,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: "8.2"
-        extensions: mbstring, intl, mysql, bcmath
-        tools: composer
-
-    - name: Install Composer Dependencies
-      run: composer install --no-dev --optimize-autoloader
-      env:
-        COMPOSER_PROCESS_TIMEOUT: 0
-        COMPOSER_NO_INTERACTION: 1
-        COMPOSER_NO_AUDIT: 1
-
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
@@ -39,67 +25,48 @@ jobs:
 
     - name: Setup SSH Key and Known Hosts
       run: |
-        # Create .ssh directory
         mkdir -p ~/.ssh
         chmod 700 ~/.ssh
 
-        # Add SSH private key
         echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/deploy_key
         chmod 600 ~/.ssh/deploy_key
 
-        # Validate SSH key format
-        echo "Validating SSH key..."
+        # Validate SSH key
         ssh-keygen -l -f ~/.ssh/deploy_key || {
           echo "❌ SSH key validation failed!"
-          echo "Please check your DEPLOY_KEY secret format"
           exit 1
         }
 
         # Add server to known_hosts
         touch ~/.ssh/known_hosts
         chmod 644 ~/.ssh/known_hosts
-        echo "Adding server to known_hosts..."
-        ssh-keyscan -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts 2>/dev/null || {
-          echo "⚠️ Warning: Could not add server to known_hosts"
-        }
+        ssh-keyscan -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
 
     - name: Test SSH Connection
       run: |
-        echo "Testing SSH connection..."
         ssh -i ~/.ssh/deploy_key \
           -p ${{ secrets.SSH_PORT }} \
           -o StrictHostKeyChecking=no \
-          -o ConnectTimeout=10 \
           ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
-          "echo '✅ SSH Connection successful!'" || {
-          echo "❌ SSH connection failed!"
-          echo "Please verify:"
-          echo "  - SSH_USER: correct username"
-          echo "  - SSH_HOST: correct IP/domain"
-          echo "  - SSH_PORT: correct port number"
-          echo "  - DEPLOY_KEY: public key is in ~/.ssh/authorized_keys on server"
-          exit 1
-        }
+          "echo '✅ SSH Connection successful!'"
 
-    - name: Deploy via RSYNC
+    - name: Deploy via RSYNC (without vendor/)
       run: |
-        echo "Starting rsync deployment..."
-        rsync -azP \
+        rsync -rltgoDvzP \
           --exclude=".git" \
           --exclude=".github" \
           --exclude="node_modules" \
           --exclude="tests" \
           --exclude=".env" \
           --exclude="storage/*.key" \
+          --exclude="vendor" \
           --delete \
           -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no" \
           ./ \
           ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.APP_PATH }}
-        echo "✅ Rsync deployment completed!"
 
-    - name: Run Post-Deployment Commands
+    - name: Run Post-Deployment Commands on Server
       run: |
-        echo "Running post-deployment commands on server..."
         ssh -i ~/.ssh/deploy_key \
           -p ${{ secrets.SSH_PORT }} \
           -o StrictHostKeyChecking=no \
@@ -111,24 +78,25 @@ jobs:
         echo "📦 Installing Composer dependencies..."
         composer install --no-dev --optimize-autoloader --no-interaction
 
-        echo "🔧 Setting permissions..."
+        echo "🔧 Setting correct permissions..."
+        chown -R ubuntu:www-data .
+        find . -type d -exec chmod 775 {} \;
+        find . -type f -exec chmod 664 {} \;
         chmod -R 775 storage bootstrap/cache
 
-        echo "⏸️  Putting application in maintenance mode..."
+        echo "⏸️  Putting app in maintenance mode..."
         php artisan down || true
 
-        echo "🗄️  Running database migrations..."
+        echo "🗄️  Running migrations..."
         php artisan migrate --force
 
-        echo "🧹 Clearing caches..."
+        echo "🧹 Clearing and optimizing..."
         php artisan optimize:clear
-
-        echo "⚡ Optimizing application..."
         php artisan config:cache
         php artisan route:cache
         php artisan view:cache
 
-        echo "✅ Bringing application back up..."
+        echo "✅ Bringing app back online..."
         php artisan up
 
         echo "🎉 Deployment completed successfully!"
@@ -137,6 +105,5 @@ jobs:
     - name: Cleanup
       if: always()
       run: |
-        # Remove SSH key for security
         rm -f ~/.ssh/deploy_key
-        echo "🧹 Cleaned up SSH key"
+        echo "🧹 SSH key removed"
