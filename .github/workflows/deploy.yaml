@@ -45,12 +45,6 @@ jobs:
           echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
 
-          echo "Validating SSH key..."
-          ssh-keygen -l -f ~/.ssh/deploy_key || {
-            echo "❌ Invalid SSH Key in DEPLOY_KEY"
-            exit 1
-          }
-
           touch ~/.ssh/known_hosts
           ssh-keyscan -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts 2>/dev/null || true
 
@@ -63,37 +57,45 @@ jobs:
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
             "echo 'SSH Connection OK'"
 
-      - name: Pre-deploy Permissions Fix
+      - name: Pre-Deploy Server Permission Fix
         run: |
           ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT }} \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
           cd ${{ secrets.APP_PATH }}
+
           php artisan down || true
 
+          # Fix owner & permission biar rsync nggak gagal
           sudo chown -R $USER:$USER .
-          sudo chmod -R 755 .
+          find . -type d -exec chmod 755 {} \;
+          find . -type f -exec chmod 644 {} \;
 
-          sudo chmod -R 775 storage bootstrap/cache
+          # Storage & cache harus writeable
+          chmod -R 775 storage bootstrap/cache
 
-          sudo rm -rf storage/framework/sessions/*
-          sudo rm -rf storage/framework/views/*
-          sudo rm -rf storage/logs/*.log
+          # Bersihkan file temporary
+          rm -rf storage/framework/sessions/*
+          rm -rf storage/framework/views/*
+          rm -rf storage/logs/*.log
           EOF
 
-      - name: Deploy via RSYNC
+      - name: Deploy via RSYNC (Fixed)
         run: |
           rsync -azP \
             --delete \
+            --no-times \
+            --omit-dir-times \
             --exclude=".git" \
             --exclude=".github" \
             --exclude="node_modules" \
             --exclude="tests" \
             --exclude=".env" \
+            --exclude="public/.well-known/" \
             --exclude="storage/*.key" \
             --exclude="storage/app/*" \
             --exclude="storage/framework/sessions/*" \
             --exclude="storage/framework/cache/*" \
-            -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT }}" \
+            -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no" \
             ./ \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.APP_PATH }}
 
@@ -108,7 +110,6 @@ jobs:
 
           chmod -R 775 storage bootstrap/cache
 
-          php artisan down || true
           php artisan migrate --force
 
           php artisan optimize:clear
