@@ -49,7 +49,7 @@ jobs:
           ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
           "echo '✅ SSH Connection successful!'"
 
-    - name: Deploy via RSYNC (safe mode)
+    - name: Deploy via RSYNC (safe, no delete)
       run: |
         rsync -rltgoDvzP \
           --exclude=".git" \
@@ -76,24 +76,24 @@ jobs:
         echo "📦 Installing Composer dependencies..."
         composer install --no-dev --optimize-autoloader --no-interaction
 
-        echo "🔧 Setting safe permissions..."
-        find . -type d -exec chmod 775 {} \;
-        find . -type f -exec chmod 664 {} \;
-        chmod -R 775 storage bootstrap/cache
-
-        echo "🧹 Clearing all config caches (critical for .env to take effect)..."
+        echo "🧹 Clearing caches to force .env reload..."
         php artisan config:clear
         php artisan cache:clear
         php artisan route:clear
         php artisan view:clear
 
-        echo "⏸️  Putting app in maintenance mode..."
+        echo "🔧 Fixing permissions for runtime directories only..."
+        # Asumsi: web server berjalan sebagai user 'www' (aaPanel default)
+        chown -R ubuntu:www storage bootstrap/cache
+        chmod -R 775 storage bootstrap/cache
+
+        echo "⏸️  Enabling maintenance mode..."
         php artisan down || true
 
         echo "🗄️  Running database migrations..."
         php artisan migrate --force
 
-        echo "⚡ Re-caching config..."
+        echo "⚡ Caching config and routes..."
         php artisan config:cache
         php artisan route:cache
         php artisan view:cache
