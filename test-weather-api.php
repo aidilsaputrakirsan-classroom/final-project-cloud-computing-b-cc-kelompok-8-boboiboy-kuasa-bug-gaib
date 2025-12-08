@@ -41,7 +41,7 @@ if ($httpCode === 200) {
     $error = json_decode($response, true);
     echo "❌ FAILED! HTTP Code: {$httpCode}\n";
     echo "   Error: " . ($error['message'] ?? $response) . "\n\n";
-    
+
     if ($httpCode === 401) {
         echo "💡 Solusi:\n";
         echo "   1. API key tidak valid atau sudah expired\n";

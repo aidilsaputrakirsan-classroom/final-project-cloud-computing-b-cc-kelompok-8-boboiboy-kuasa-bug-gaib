@@ -25,8 +25,8 @@
                     <div class="flex-1 min-w-0">
                         <h3 class="text-xl sm:text-2xl font-bold text-gray-900 truncate">{{ $itinerary->title }}</h3>
                         <p class="mt-1 text-sm text-gray-500">
-                            {{ \Carbon\Carbon::parse($itinerary->startDate)->format('d M Y') }} -
-                            {{ \Carbon\Carbon::parse($itinerary->endDate)->format('d M Y') }}
+                            {{ \Carbon\Carbon::parse($itinerary->start_date)->format('d M Y') }} -
+                            {{ \Carbon\Carbon::parse($itinerary->end_date)->format('d M Y') }}
                         </p>
                     </div>
                     <div class="flex-shrink-0">
@@ -93,8 +93,8 @@
 
                         // Generate array of all dates between start and end date
                         $allDates = [];
-                        $currentDate = \Carbon\Carbon::parse($itinerary->startDate);
-                        $endDate = \Carbon\Carbon::parse($itinerary->endDate);
+                        $currentDate = \Carbon\Carbon::parse($itinerary->start_date);
+                        $endDate = \Carbon\Carbon::parse($itinerary->end_date);
 
                         while ($currentDate <= $endDate) {
                             $dateKey = $currentDate->format('Y-m-d');

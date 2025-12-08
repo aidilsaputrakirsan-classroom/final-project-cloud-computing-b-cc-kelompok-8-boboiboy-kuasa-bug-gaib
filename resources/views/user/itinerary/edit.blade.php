@@ -125,8 +125,8 @@
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const startInput = document.getElementById('startDate');
-            const endInput = document.getElementById('endDate');
+            const startInput = document.getElementById('start_date');
+            const endInput = document.getElementById('end_date');
 
             // Fungsi untuk mengatur batasan tanggal akhir
             function updateEndDateConstraints() {

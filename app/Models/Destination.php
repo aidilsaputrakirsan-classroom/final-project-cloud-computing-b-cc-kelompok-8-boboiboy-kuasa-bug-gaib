@@ -18,6 +18,7 @@ class Destination extends Model
             'created_by',
             'category_id',
             'place_name',
+            'slug',
             'description',
             'administrative_area',
             'province',

@@ -17,8 +17,8 @@ class ItineraryFactory extends Factory
             'user_id' => User::factory(),
             'title' => $this->faker->sentence(3),
             'status' => $this->faker->randomElement(['completed', 'ongoing', 'draft']),
-            'startDate' => $this->faker->dateTimeBetween('+1 month', '+2 months'),
-            'endDate' => $this->faker->dateTimeBetween('+2 months', '+3 months'),
+            'start_date' => $this->faker->dateTimeBetween('+1 month', '+2 months'),
+            'end_date' => $this->faker->dateTimeBetween('+2 months', '+3 months'),
             'created_at' => now(),
             'updated_at' => now(),
         ];
