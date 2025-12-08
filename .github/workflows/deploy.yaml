@@ -73,8 +73,8 @@ jobs:
 
         cd ${{ secrets.APP_PATH }}
 
-        echo "📦 Installing Composer dependencies (including cviebrock/eloquent-sluggable)..."
-        composer install --no-dev --optimize-autoloader --no-interaction --quiet --with=cviebrock/eloquent-sluggable
+        echo "📦 Installing Composer dependencies..."
+        composer install --no-dev --optimize-autoloader --no-interaction
 
         echo "🔧 Setting safe permissions..."
         find . -type d -exec chmod 775 {} \;
