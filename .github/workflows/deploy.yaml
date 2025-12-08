@@ -84,7 +84,6 @@ jobs:
 
         echo "🔧 Fixing permissions for runtime directories only..."
         # Asumsi: web server berjalan sebagai user 'www' (aaPanel default)
-        chown -R ubuntu:www storage bootstrap/cache
         chmod -R 775 storage bootstrap/cache
 
         echo "⏸️  Enabling maintenance mode..."
