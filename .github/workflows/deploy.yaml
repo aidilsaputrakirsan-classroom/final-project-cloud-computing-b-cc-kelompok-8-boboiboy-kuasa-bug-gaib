@@ -27,7 +27,6 @@ jobs:
       run: |
         mkdir -p ~/.ssh
         chmod 700 ~/.ssh
-
         echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/deploy_key
         chmod 600 ~/.ssh/deploy_key
 
@@ -50,7 +49,7 @@ jobs:
           ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
           "echo '✅ SSH Connection successful!'"
 
-    - name: Deploy via RSYNC (without vendor/)
+    - name: Deploy via RSYNC (exclude vendor/)
       run: |
         rsync -rltgoDvzP \
           --exclude=".git" \
@@ -61,6 +60,7 @@ jobs:
           --exclude="storage/*.key" \
           --exclude="vendor" \
           --delete \
+          --delete-excluded \
           -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no" \
           ./ \
           ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.APP_PATH }}
@@ -78,8 +78,7 @@ jobs:
         echo "📦 Installing Composer dependencies..."
         composer install --no-dev --optimize-autoloader --no-interaction
 
-        echo "🔧 Setting correct permissions..."
-        chown -R ubuntu:www-data .
+        echo "🔧 Setting file permissions (no chown needed)..."
         find . -type d -exec chmod 775 {} \;
         find . -type f -exec chmod 664 {} \;
         chmod -R 775 storage bootstrap/cache
@@ -87,7 +86,7 @@ jobs:
         echo "⏸️  Putting app in maintenance mode..."
         php artisan down || true
 
-        echo "🗄️  Running migrations..."
+        echo "🗄️  Running database migrations..."
         php artisan migrate --force
 
         echo "🧹 Clearing and optimizing..."
@@ -99,7 +98,7 @@ jobs:
         echo "✅ Bringing app back online..."
         php artisan up
 
-        echo "🎉 Deployment completed successfully!"
+        echo "🎉 Deployment completed!"
         EOF
 
     - name: Cleanup
