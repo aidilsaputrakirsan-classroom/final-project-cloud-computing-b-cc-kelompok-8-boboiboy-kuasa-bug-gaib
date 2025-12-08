@@ -2,69 +2,122 @@ name: Deploy Laravel to Server via RSYNC
 
 on:
   push:
-    branches: ["main"]
+    branches: ["development"]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: "8.2"
-        extensions: mbstring, intl, mysql, bcmath
-        tools: composer
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          extensions: mbstring, intl, mysql, bcmath
+          tools: composer
 
-    - name: Install Composer Dependencies
-      run: composer install --no-dev --optimize-autoloader
+      - name: Install Composer Dependencies
+        run: composer install --no-dev --optimize-autoloader
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: "18"
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
 
-    - name: Install NPM dependencies
-      run: npm install
+      - name: Install NPM dependencies
+        run: npm install
 
-    - name: Build Assets
-      run: npm run build
+      - name: Build Assets
+        run: npm run build
 
-    - name: Add SSH Key
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/deploy_key
-        chmod 600 ~/.ssh/deploy_key
+      - name: Add SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
 
-    - name: Add server to known hosts
-      run: |
-        mkdir -p ~/.ssh
-        touch ~/.ssh/known_hosts
-        ssh-keyscan -T 10 -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts 2>/dev/null || true
+      - name: Add server to known hosts
+        run: |
+          mkdir -p ~/.ssh
+          touch ~/.ssh/known_hosts
+          ssh-keyscan -T 10 -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts 2>/dev/null || true
 
-    - name: Deploy via RSYNC
-      run: |
-        rsync -azP \
-        --exclude=".git" \
-        --exclude="node_modules" \
-        --exclude="tests" \
-        --delete \
-        -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT }}" \
-        ./ \
-        ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.APP_PATH }}
+      # FIX: Perbaiki permission sebelum rsync
+      - name: Fix permissions on server
+        run: |
+          ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT }} \
+          ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          cd ${{ secrets.APP_PATH }}
 
-    - name: Run deployment commands on server
-      run: |
-        ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT }} \
-        ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-        cd ${{ secrets.APP_PATH }}
-        php artisan down || true
-        composer install --no-dev --optimize-autoloader
-        php artisan migrate --force
-        php artisan optimize:clear
-        php artisan optimize
-        php artisan up
-        EOF
+          # Stop services yang mungkin mengunci file
+          php artisan down || true
+
+          # Fix ownership dan permission
+          sudo chown -R $USER:$USER .
+          sudo chmod -R 755 .
+
+          # Fix specific directories
+          sudo chmod -R 775 storage bootstrap/cache
+          sudo chmod -R 755 vendor
+
+          # Hapus file cache yang terkunci
+          sudo rm -rf storage/framework/sessions/*
+          sudo rm -rf storage/framework/views/*
+          sudo rm -rf storage/logs/*.log
+
+          # Fix .well-known directory
+          if [ -d "public/.well-known" ]; then
+            sudo chmod -R 755 public/.well-known
+            sudo rm -rf public/.well-known/acme-challenge/*
+          fi
+          EOF
+
+      - name: Deploy via RSYNC
+        run: |
+          rsync -avz \
+          --delete \
+          --exclude=".git" \
+          --exclude="node_modules" \
+          --exclude="tests" \
+          --exclude=".env" \
+          --exclude="storage/app/*" \
+          --exclude="storage/logs/*.log" \
+          --exclude="storage/framework/sessions/*" \
+          --exclude="storage/framework/cache/*" \
+          --exclude="storage/framework/views/*" \
+          --exclude="public/.well-known" \
+          -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT }}" \
+          ./ \
+          ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.APP_PATH }}
+
+      - name: Run deployment commands on server
+        run: |
+          ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT }} \
+          ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          cd ${{ secrets.APP_PATH }}
+
+          # Install dependencies
+          composer install --no-dev --optimize-autoloader
+
+          # Run migrations
+          php artisan migrate --force
+
+          # Clear and optimize cache
+          php artisan optimize:clear
+          php artisan config:cache
+          php artisan route:cache
+          php artisan view:cache
+
+          # Fix permissions after deployment
+          sudo chown -R www-data:www-data storage bootstrap/cache
+          sudo chmod -R 775 storage bootstrap/cache
+
+          # Restart services
+          php artisan queue:restart || true
+
+          # Bring app back up
+          php artisan up
+          EOF
