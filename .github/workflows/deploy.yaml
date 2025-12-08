@@ -2,7 +2,7 @@ name: Deploy Laravel to Server via RSYNC
 
 on:
   push:
-    branches: ["main"]
+    branches: ["development"]
 
 jobs:
   deploy:
