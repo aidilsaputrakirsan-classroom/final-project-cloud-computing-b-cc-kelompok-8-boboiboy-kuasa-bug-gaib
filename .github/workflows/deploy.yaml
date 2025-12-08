@@ -49,7 +49,7 @@ jobs:
           ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
           "echo '✅ SSH Connection successful!'"
 
-    - name: Deploy via RSYNC (exclude vendor/)
+    - name: Deploy via RSYNC (safe mode)
       run: |
         rsync -rltgoDvzP \
           --exclude=".git" \
@@ -59,13 +59,11 @@ jobs:
           --exclude=".env" \
           --exclude="storage/*.key" \
           --exclude="vendor" \
-          --delete \
-          --delete-excluded \
           -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no" \
           ./ \
           ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.APP_PATH }}
 
-    - name: Run Post-Deployment Commands on Server
+    - name: Run Post-Deployment Commands
       run: |
         ssh -i ~/.ssh/deploy_key \
           -p ${{ secrets.SSH_PORT }} \
@@ -78,10 +76,16 @@ jobs:
         echo "📦 Installing Composer dependencies..."
         composer install --no-dev --optimize-autoloader --no-interaction
 
-        echo "🔧 Setting file permissions (no chown needed)..."
+        echo "🔧 Setting safe permissions..."
         find . -type d -exec chmod 775 {} \;
         find . -type f -exec chmod 664 {} \;
         chmod -R 775 storage bootstrap/cache
+
+        echo "🧹 Clearing all config caches (critical for .env to take effect)..."
+        php artisan config:clear
+        php artisan cache:clear
+        php artisan route:clear
+        php artisan view:clear
 
         echo "⏸️  Putting app in maintenance mode..."
         php artisan down || true
@@ -89,8 +93,7 @@ jobs:
         echo "🗄️  Running database migrations..."
         php artisan migrate --force
 
-        echo "🧹 Clearing and optimizing..."
-        php artisan optimize:clear
+        echo "⚡ Re-caching config..."
         php artisan config:cache
         php artisan route:cache
         php artisan view:cache
@@ -98,7 +101,7 @@ jobs:
         echo "✅ Bringing app back online..."
         php artisan up
 
-        echo "🎉 Deployment completed!"
+        echo "🎉 Deployment completed successfully!"
         EOF
 
     - name: Cleanup
