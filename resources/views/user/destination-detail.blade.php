@@ -317,8 +317,20 @@
                                 @endif
                             </div>
                         @else
-                            <div class="text-center py-4 text-gray-500">
-                                Data cuaca tidak tersedia saat ini
+                            <div class="text-center py-8 text-gray-500 bg-gray-50 rounded-lg">
+                                <svg class="h-12 w-12 mx-auto text-gray-400 mb-3" xmlns="http://www.w3.org/2000/svg"
+                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+                                </svg>
+                                <p class="font-medium">Data cuaca tidak tersedia saat ini</p>
+                                <p class="text-sm mt-1">
+                                    @if (!config('services.openweathermap.key'))
+                                        API key OpenWeatherMap belum dikonfigurasi. Silakan hubungi administrator.
+                                    @else
+                                        Data cuaca tidak dapat diambil. Pastikan API key OpenWeatherMap valid dan aktif.
+                                    @endif
+                                </p>
                             </div>
                         @endif
                     </div>
