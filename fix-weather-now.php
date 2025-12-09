@@ -37,7 +37,7 @@ if ($httpCode === 200) {
     $error = json_decode($response, true);
     echo "❌ API Key TIDAK VALID! HTTP Code: {$httpCode}\n";
     echo "   Error: " . ($error['message'] ?? $response) . "\n\n";
-    
+
     if ($httpCode === 401) {
         echo "⚠️  KEMUNGKINAN PENYEBAB:\n";
         echo "   1. API key baru butuh 5-10 menit untuk aktif\n";
@@ -50,7 +50,7 @@ if ($httpCode === 200) {
         echo "   3. Buat API key baru di: https://home.openweathermap.org/api_keys\n";
         echo "   4. Pastikan status API key 'Active' (bukan 'Pending')\n\n";
     }
-    
+
     echo "Lanjutkan update .env? (y/n): ";
     $handle = fopen("php://stdin", "r");
     $line = fgets($handle);

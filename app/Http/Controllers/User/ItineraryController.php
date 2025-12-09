@@ -39,10 +39,10 @@ class ItineraryController extends Controller
     {
         // Load itinerary destinations with destination relationship
         $itinerary->load('itineraryDestinations.destination');
-        
+
         // Get weather data for each destination
         $weatherData = $this->getWeatherDataForItinerary($itinerary);
-        
+
         // Tampilkan detail itinerary
         return view('user.itinerary.show', compact('itinerary', 'weatherData'));
     }
@@ -59,17 +59,17 @@ class ItineraryController extends Controller
 
         foreach ($itinerary->itineraryDestinations as $itineraryDestination) {
             // Skip if destination doesn't exist or doesn't have coordinates
-            if (!$itineraryDestination->destination || 
-                !$itineraryDestination->destination->latitude || 
+            if (!$itineraryDestination->destination ||
+                !$itineraryDestination->destination->latitude ||
                 !$itineraryDestination->destination->longitude) {
                 continue;
             }
 
             $lat = $itineraryDestination->destination->latitude;
             $lng = $itineraryDestination->destination->longitude;
-            
+
             // Get visit date time or use current date
-            $visitDateTime = $itineraryDestination->visit_date_time 
+            $visitDateTime = $itineraryDestination->visit_date_time
                 ? \Carbon\Carbon::parse($itineraryDestination->visit_date_time)
                 : \Carbon\Carbon::now();
 
@@ -79,7 +79,7 @@ class ItineraryController extends Controller
             if ($forecast && isset($forecast['list']) && !empty($forecast['list'])) {
                 // Find the closest forecast to the visit date/time
                 $closestForecast = $this->findClosestForecast($forecast['list'], $visitDateTime);
-                
+
                 if ($closestForecast) {
                     $weatherData[$itineraryDestination->id] = [
                         'forecast_time' => \Carbon\Carbon::parse($closestForecast['dt_txt'])->format('d M Y, H:i'),
