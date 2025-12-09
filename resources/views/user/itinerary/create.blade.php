@@ -126,8 +126,8 @@
 
 @push('scripts')
     <script>
-        const startInput = document.getElementById('startDate');
-        const endInput = document.getElementById('endDate');
+        const startInput = document.getElementById('start_date');
+        const endInput = document.getElementById('end_date');
 
         startInput.addEventListener('change', () => {
             const startDate = new Date(startInput.value);

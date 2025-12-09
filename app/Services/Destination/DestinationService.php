@@ -5,6 +5,7 @@ namespace App\Services\Destination;
 use App\Models\Destination;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class DestinationService
 {
@@ -82,6 +83,8 @@ class DestinationService
      */
     public function createDestination(array $data): Destination
     {
+        $slug = $this->generateUniqueSlug($data['place_name']);
+
         $destination = Destination::create([
             'place_name' => $data['place_name'],
             'description' => $data['description'],
@@ -95,6 +98,7 @@ class DestinationService
             'best_visit_time' => $data['best_visit_time'],
             'latitude' => $data['latitude'],
             'longitude' => $data['longitude'],
+            'slug' => $slug,
         ]);
 
         if (isset($data['image']) && is_array($data['image'])) {
@@ -146,6 +150,10 @@ class DestinationService
     {
         $this->imageService->validateImageCount($destination, $data);
 
+        $slug = $destination->place_name === $data['place_name']
+            ? $destination->slug
+            : $this->generateUniqueSlug($data['place_name'], $destination->id);
+
         $destination->update([
             'place_name' => $data['place_name'],
             'description' => $data['description'],
@@ -156,6 +164,7 @@ class DestinationService
             'best_visit_time' => $data['best_visit_time'],
             'latitude' => $data['latitude'],
             'longitude' => $data['longitude'],
+            'slug' => $slug,
         ]);
 
         if (isset($data['image']) && is_array($data['image'])) {
@@ -196,5 +205,24 @@ class DestinationService
     public function getTotalDestinationsByUser($userId): int
     {
         return Destination::where('created_by', $userId)->count();
+    }
+
+    /**
+     * Generate slug unik untuk destinasi
+     */
+    private function generateUniqueSlug(string $placeName, ?int $ignoreId = null): string
+    {
+        $baseSlug = Str::slug($placeName);
+        $slug = $baseSlug;
+        $counter = 1;
+
+        while (Destination::where('slug', $slug)
+            ->when($ignoreId, fn($query) => $query->where('id', '!=', $ignoreId))
+            ->exists()) {
+            $slug = $baseSlug . '-' . $counter;
+            $counter++;
+        }
+
+        return $slug;
     }
 }

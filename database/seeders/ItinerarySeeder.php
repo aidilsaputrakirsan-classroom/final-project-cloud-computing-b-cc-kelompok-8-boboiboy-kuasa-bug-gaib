@@ -19,8 +19,8 @@ class ItinerarySeeder extends Seeder
                 'user_id' => 2, // Budi
                 'title' => 'Liburan Bukit Kebo 3 Hari',
                 'slug' => 'liburan-bukit-3-hari',
-                'startDate' => '2025-05-01',
-                'endDate' => '2025-05-03',
+                'start_date' => '2025-05-01',
+                'end_date' => '2025-05-03',
                 'status' => 'ongoing',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
@@ -29,8 +29,8 @@ class ItinerarySeeder extends Seeder
                 'user_id' => 3, // Siti
                 'title' => 'Wisata Kalimantan Timur',
                 'slug' => 'wisata-kalimantan-timur',
-                'startDate' => '2025-06-15',
-                'endDate' => '2025-06-20',
+                'start_date' => '2025-06-15',
+                'end_date' => '2025-06-20',
                 'status' => 'ongoing',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
@@ -39,8 +39,8 @@ class ItinerarySeeder extends Seeder
                 'user_id' => 4, // Ahmad
                 'title' => 'Trip Berau',
                 'slug' => 'trip-berau',
-                'startDate' => '2024-12-10',
-                'endDate' => '2024-12-15',
+                'start_date' => '2024-12-10',
+                'end_date' => '2024-12-15',
                 'status' => 'completed',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
