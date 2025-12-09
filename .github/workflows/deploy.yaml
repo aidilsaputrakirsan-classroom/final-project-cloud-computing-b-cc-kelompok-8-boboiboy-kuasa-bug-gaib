@@ -73,20 +73,26 @@ jobs:
           cd ${{ secrets.APP_PATH }}
 
           echo "🧹 Cleaning old vendor directory and caches..."
-          rm -rf vendor/
+          # Gunakan sudo untuk menghapus vendor dengan permission issues
+          sudo rm -rf vendor/
           rm -rf bootstrap/cache/*.php
 
           echo "📦 Installing Composer dependencies (fresh install)..."
           composer install --no-dev --optimize-autoloader --no-interaction --no-cache
 
-          echo "🔧 Clearing all Laravel caches..."
+          echo "🧹 Clearing all Laravel caches..."
           php artisan config:clear
           php artisan cache:clear
           php artisan route:clear
           php artisan view:clear
 
-          echo "🔐 Setting proper permissions..."
+          echo "🔧 Setting proper permissions..."
+          # Fix permissions untuk folder yang baru dibuat
+          sudo chown -R $USER:$USER vendor/
           chmod -R 775 storage bootstrap/cache
+
+          # Jika menggunakan www-data sebagai web server user (uncomment jika perlu)
+          # sudo chown -R www-data:www-data storage bootstrap/cache vendor
 
           echo "⏸️  Enabling maintenance mode..."
           php artisan down --render="errors::503" --retry=60 || true
