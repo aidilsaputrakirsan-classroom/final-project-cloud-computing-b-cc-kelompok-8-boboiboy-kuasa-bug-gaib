@@ -222,7 +222,7 @@ Sistem menggunakan 2 role utama dengan permission berbeda:
 ![Halaman Rencana Perjalanan](public/images/screenshots/01-N.jpeg)
 *Halaman untuk membuat rencana perjalanan*
 
-## Struktur Database (BELUM)
+## Struktur Database
 
 ### Tabel Utama
 
@@ -243,6 +243,10 @@ users (1) ─── (n) reviews
 categories (1) ─── (n) destinations
 destinations (1) ─── (n) reviews
 ```
+
+### Database
+![Struktur Database](public/images/screenshots/01-O.jpeg)
+*Struktur database*
 
 ## Arsitektur & Komponen
 
