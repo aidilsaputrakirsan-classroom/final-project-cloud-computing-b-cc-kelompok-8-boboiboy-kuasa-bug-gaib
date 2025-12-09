@@ -222,47 +222,31 @@ Sistem menggunakan 2 role utama dengan permission berbeda:
 ![Halaman Rencana Perjalanan](public/images/screenshots/01-N.jpeg)
 *Halaman untuk membuat rencana perjalanan*
 
-## Struktur Database (BELUM)
+## Struktur Database
 
 ### Tabel Utama
 
-- **users** - Data pengguna sistem (dengan photo dan signature)
-- **dosens** - Data dosen (termasuk dosen eksternal)
-- **mahasiswas** - Data mahasiswa
-- **pengajuan_tas** - Pengajuan tugas akhir
-- **bimbingans** - Catatan bimbingan (dengan status approval)
-- **sempros** - Data seminar proposal (dengan hasil_sempro)
-- **sidang_tas** - Data sidang tugas akhir (dengan tracking revisi)
-- **periodes** - Periode akademik (TA dan Sempro)
-- **jadwal_sempros** - Jadwal seminar proposal
-- **jadwal_tas** - Jadwal sidang TA
-- **penilaian_sempros** - Nilai seminar proposal
-- **penilaian_sidang_tas** - Nilai sidang TA
-- **katalogs** - Katalog tugas akhir (dengan approval system)
-- **referensis** - Referensi untuk mahasiswa
-- **prosedurs** - Prosedur dan panduan
-- **notifikasis** - Notifikasi real-time untuk users
-- **riwayat_pengajuans** - Riwayat perubahan pengajuan
-- **riwayat_pendaftaran_sempros** - Riwayat pendaftaran sempro
-- **riwayat_pendaftaran_sidang_tas** - Riwayat pendaftaran sidang
+- **users** - Data pengguna (profile dan hak akses)
+- **destinasi** - Data destinasi wisata (nama tempat, lokasi, deskripsi, dll)
+- **kategori** - Data ketegori untuk destinasi
+- **rencana_perjalanan** - Rencana perjalanan pengguna (judul, tanggal, destinasi terkait)
+- **activity_log** - Catatan login/logout
+- **submissions** - Pengajuan destinasi baru oleh pengguna
+- **reviews** - Review & rating destinasi oleh pengguna
 
 ### Relasi Database
 
 ```
-users (1) ─── (1) mahasiswas
-users (1) ─── (1) dosens
-
-mahasiswas (1) ─── (n) pengajuan_tas
-pengajuan_tas (1) ─── (n) bimbingans
-pengajuan_tas (1) ─── (1) sempros
-pengajuan_tas (1) ─── (1) sidang_tas
-
-periodes (1) ─── (n) jadwal_sempros
-periodes (1) ─── (n) jadwal_tas
-
-sempros (1) ─── (n) penilaian_sempros
-sidang_tas (1) ─── (n) penilaian_sidang_tas
+users (1) ─── (n) travel_plans
+users (1) ─── (n) submissions
+users (1) ─── (n) reviews
+categories (1) ─── (n) destinations
+destinations (1) ─── (n) reviews
 ```
+
+### Database
+![Struktur Database](public/images/screenshots/01-O.jpeg)
+*Struktur database*
 
 ## Arsitektur & Komponen
 
