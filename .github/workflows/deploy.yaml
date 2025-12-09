@@ -9,102 +9,122 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: "18"
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
 
-    - name: Install NPM dependencies
-      run: npm install
+      - name: Install NPM dependencies
+        run: npm install
 
-    - name: Build Assets
-      run: npm run build
+      - name: Build Assets
+        run: npm run build
 
-    - name: Setup SSH Key and Known Hosts
-      run: |
-        mkdir -p ~/.ssh
-        chmod 700 ~/.ssh
-        echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/deploy_key
-        chmod 600 ~/.ssh/deploy_key
+      - name: Setup SSH Key and Known Hosts
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
 
-        # Validate SSH key
-        ssh-keygen -l -f ~/.ssh/deploy_key || {
-          echo "❌ SSH key validation failed!"
+          # Validate SSH key
+          ssh-keygen -l -f ~/.ssh/deploy_key || {
+            echo "❌ SSH key validation failed!"
+            exit 1
+          }
+
+          # Add server to known_hosts
+          touch ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+          ssh-keyscan -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Test SSH Connection
+        run: |
+          ssh -i ~/.ssh/deploy_key \
+            -p ${{ secrets.SSH_PORT }} \
+            -o StrictHostKeyChecking=no \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
+            "echo '✅ SSH Connection successful!'"
+
+      - name: Deploy via RSYNC (safe, no delete)
+        run: |
+          rsync -rltgoDvzP \
+            --exclude=".git" \
+            --exclude=".github" \
+            --exclude="node_modules" \
+            --exclude="tests" \
+            --exclude=".env" \
+            --exclude="storage/*.key" \
+            --exclude="vendor" \
+            -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no" \
+            ./ \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.APP_PATH }}
+
+      - name: Run Post-Deployment Commands
+        run: |
+          ssh -i ~/.ssh/deploy_key \
+            -p ${{ secrets.SSH_PORT }} \
+            -o StrictHostKeyChecking=no \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          set -e
+          cd ${{ secrets.APP_PATH }}
+
+          echo "🧹 Cleaning old vendor directory and caches..."
+          rm -rf vendor/
+          rm -rf bootstrap/cache/*.php
+
+          echo "📦 Installing Composer dependencies (fresh install)..."
+          composer install --no-dev --optimize-autoloader --no-interaction --no-cache
+
+          echo "🔧 Clearing all Laravel caches..."
+          php artisan config:clear
+          php artisan cache:clear
+          php artisan route:clear
+          php artisan view:clear
+
+          echo "🔐 Setting proper permissions..."
+          chmod -R 775 storage bootstrap/cache
+
+          echo "⏸️  Enabling maintenance mode..."
+          php artisan down --render="errors::503" --retry=60 || true
+
+          echo "🗄️  Running database migrations..."
+          php artisan migrate --force
+
+          echo "⚡ Optimizing application (caching)..."
+          php artisan config:cache
+          php artisan route:cache
+          php artisan view:cache
+
+          echo "✅ Disabling maintenance mode..."
+          php artisan up
+
+          echo ""
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "🎉 Deployment completed successfully!"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo ""
+          EOF
+
+      - name: Cleanup SSH Key
+        if: always()
+        run: |
+          rm -f ~/.ssh/deploy_key
+          echo "🧹 SSH key securely removed"
+
+      - name: Deployment Summary
+        if: success()
+        run: |
+          echo "✅ Deployment Status: SUCCESS"
+          echo "🌐 Application: ${{ secrets.SSH_HOST }}"
+          echo "📅 Time: $(date)"
+
+      - name: Deployment Failed
+        if: failure()
+        run: |
+          echo "❌ Deployment Status: FAILED"
+          echo "Please check the logs above for error details"
           exit 1
-        }
-
-        # Add server to known_hosts
-        touch ~/.ssh/known_hosts
-        chmod 644 ~/.ssh/known_hosts
-        ssh-keyscan -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
-
-    - name: Test SSH Connection
-      run: |
-        ssh -i ~/.ssh/deploy_key \
-          -p ${{ secrets.SSH_PORT }} \
-          -o StrictHostKeyChecking=no \
-          ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
-          "echo '✅ SSH Connection successful!'"
-
-    - name: Deploy via RSYNC (safe, no delete)
-      run: |
-        rsync -rltgoDvzP \
-          --exclude=".git" \
-          --exclude=".github" \
-          --exclude="node_modules" \
-          --exclude="tests" \
-          --exclude=".env" \
-          --exclude="storage/*.key" \
-          --exclude="vendor" \
-          -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no" \
-          ./ \
-          ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.APP_PATH }}
-
-    - name: Run Post-Deployment Commands
-      run: |
-        ssh -i ~/.ssh/deploy_key \
-          -p ${{ secrets.SSH_PORT }} \
-          -o StrictHostKeyChecking=no \
-          ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-        set -e
-
-        cd ${{ secrets.APP_PATH }}
-
-        echo "📦 Installing Composer dependencies..."
-        composer install --no-dev --optimize-autoloader --no-interaction
-
-        echo "🧹 Clearing caches to force .env reload..."
-        php artisan config:clear
-        php artisan cache:clear
-        php artisan route:clear
-        php artisan view:clear
-
-        echo "🔧 Fixing permissions for runtime directories only..."
-        # Asumsi: web server berjalan sebagai user 'www' (aaPanel default)
-        chmod -R 775 storage bootstrap/cache
-
-        echo "⏸️  Enabling maintenance mode..."
-        php artisan down || true
-
-        echo "🗄️  Running database migrations..."
-        php artisan migrate --force
-
-        echo "⚡ Caching config and routes..."
-        php artisan config:cache
-        php artisan route:cache
-        php artisan view:cache
-
-        echo "✅ Bringing app back online..."
-        php artisan up
-
-        echo "🎉 Deployment completed successfully!"
-        EOF
-
-    - name: Cleanup
-      if: always()
-      run: |
-        rm -f ~/.ssh/deploy_key
-        echo "🧹 SSH key removed"
